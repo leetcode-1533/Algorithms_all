@@ -37,7 +37,7 @@ public class Percolation {
         size = N;
         isopen = new boolean[size*size];
 
-        container = new WeightedQuickUnionUF(N*N);	
+        container = new WeightedQuickUnionUF(N*N + 1);	
         temp = new WeightedQuickUnionUF(N*N + 2);  
 
     }
@@ -54,6 +54,10 @@ public class Percolation {
         }   
         if(i == size) {
             temp.union(center(i, j), center(size, size + 2));  
+        }
+        
+        if(i == 1){
+            container.union(center(i, j), center(size, size + 1));
         }
         
 
@@ -96,17 +100,20 @@ public class Percolation {
         }
         
         int curid = container.find(center(i, j));
+        int openedid = container.find(center(size, size + 1));
         
-        for(int ind = 1; ind <= size; ind ++){ 	
-            if(isOpen( 1, ind) == true){
-                int targetid = container.find(center(1, ind));
-
-                if(curid == targetid){ // Return true if connected, else continue
-                    return true;
-                }
-            }
-        }
-        return false; // Not connected
+        return (curid == openedid);
+        
+//        for(int ind = 1; ind <= size; ind ++){ 	
+//            if(isOpen( 1, ind) == true){
+//                int targetid = container.find(center(1, ind));
+//
+//                if(curid == targetid){ // Return true if connected, else continue
+//                    return true;
+//                }
+//            }
+//        }
+//        return false; // Not connected
     }
 
     public boolean percolates() {	
