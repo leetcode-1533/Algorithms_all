@@ -20,7 +20,7 @@ public class Percolation {
 	}
 	
 	private int left(int i, int j) {
-		return (i - 1) * size + j - 1;
+		return (i - 1) * size + j - 2;
 	}
 	
 	private int right(int i, int j) {
@@ -39,59 +39,53 @@ public class Percolation {
 		container = new WeightedQuickUnionUF(N*N);		
 	}
 	
-	public void open(int i, int j) {
-		if(i <= 0 || i > size || j <= 0 || j > size) {
+	public void open( int i, int j) {
+		if( i <= 0 || i > size || j <= 0 || j > size) {
 			throw new java.lang.IndexOutOfBoundsException();
 		}
 		
-		if( i > 1) { // Have above
-			container.union(up(i, j), center(i, j));
-			isopen[center(i, j)] = true;
+		isopen[center( i, j)] = true;
+		
+		if( i > 1 && isOpen( i - 1, j)) { // Have above
+			container.union( up( i, j), center(i, j));
 		}
 		
-		if( i < size) { // Have below
-			container.union(down(i, j), center(i, j));
-			isopen[center(i, j)] = true;
+		if( i < size && isOpen( i + 1, j)) { // Have below
+			container.union( down( i, j), center(i, j));
 		}
 		
-		if( j > 1) { // Have left
-			container.union(left(i, j), center(i, j));
-			isopen[center(i, j)] = true;
+		if( j > 1 && isOpen( i, j - 1)) { // Have left
+			container.union( left(i, j), center(i, j));
 		}
 		
-		if( j < size) { // Have right
-			container.union(right(i, j), center(i, j));
-			isopen[center(i, j)] = true;
+		if( j < size && isOpen( i, j + 1)) { // Have right
+			container.union( right(i, j), center(i, j));
 		}
 	}
 	
-	public boolean isOpen(int i, int j) {
-		if(i <= 0 || i > size || j <= 0 || j > size) {
+	public boolean isOpen( int i, int j) {
+		if( i <= 0 || i > size || j <= 0 || j > size) {
 			throw new java.lang.IndexOutOfBoundsException();
 		}
 		
-		if( i > 1) { // Have above, checked if connected with its above
-			return container.connected(up(i, j), center(i, j));
-		}
-		else if( j > 1) { // i==1, j>1 have left
-			return container.connected(left(i, j), center(i, j));
-		}
-		else { // i,j = (1, 1)
-			return container.connected(right(i, j),	center(i ,j));
-		}
+		return isopen[center(i, j)];
 	}
 	
-	public boolean isFull(int i, int j) {
-		if(i <= 0 || i > size || j <= 0 || j > size) {
+	public boolean isFull( int i, int j) {
+		if( i <= 0 || i > size || j <= 0 || j > size) {
 			throw new java.lang.IndexOutOfBoundsException();
 		}
 		
-		int curid = container.find(center(i, j));
+		if( isOpen(i, j) == false){
+			return false;
+		}
 		
-		for( int ind = 1; ind <= size; ind ++){ 		
-			if( entrance[ind - 1] == true){
+		int curid = container.find( center( i, j));
+		
+		for( int ind = 1; ind <= size; ind ++){ 	
+			if( isOpen( 1, ind) == true){
 				int targetid = container.find(center(1, ind));
-	
+		
 				if( curid == targetid){ // Return true if connected, else continue
 					return true;
 				}
@@ -102,13 +96,14 @@ public class Percolation {
 	
 	public boolean percolates() {		
 		for( int ind = 1; ind <= size; ind++){
-			if( entrance[ind - 1] == true){
+			if( isOpen(1, ind) == true){
 				int eid = container.find( center( 1, ind));
 				
 				for( int inn = 1; inn <= size; inn++){
-					if( out[ind - 1] == true){
-						if( eid == container.find(center(size, inn)));
+					if( isOpen(size, inn) == true){
+						if( eid == container.find(center(size, inn))){
 							return true;
+						}
 					}
 				}
 			}
@@ -116,13 +111,14 @@ public class Percolation {
 		return false;
 	}
 	
-	public static void main(String[] args) {
-		StdOut.println("Hello Algorithm");
+	public static void main( String[] args) {
+		StdOut.println( "Hello Algorithm");
 		Percolation test = new Percolation(4);	
-		test.open(1, 1);
-		test.open(2, 1);
-		test.open(3, 1);
 		
-		StdOut.println(test.isFull(4, 4));
+		test.open( 1, 1);
+		test.open( 2, 1);
+		test.open( 2, 2);
+		
+		StdOut.println( test.isFull( 2, 2));
 	}
 }
