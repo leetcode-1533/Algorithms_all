@@ -75,8 +75,8 @@ public class PercolationStats {
 		}
 		
 		PercolationStats test = new PercolationStats(firstArg, secondArg);
-		StdOut.printf("mean = %f\n", test.mean());
-		StdOut.printf("stddev = %f\n", test.stddev());
-		StdOut.printf("95%% confidence interval = %f, %f", test.confidenceLo(), test.confidenceHi());
+		StdOut.printf("mean = %.6f\n", test.mean());
+		StdOut.printf("stddev = %.18f\n", test.stddev());
+		StdOut.printf("95%% confidence interval = %.18f, %.18f", test.confidenceLo(), test.confidenceHi());
 	}
 }
