@@ -3,58 +3,58 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
-	
-	private double[] results;
-	
-	private static int[] inverse(int index, int size){
-		int[] result = {index/size + 1,index%size + 1};
-		return result;
-	}
-	
-	public PercolationStats(int N, int T){     // perform T independent experiments on an N-by-N grid
-		if(N <= 0 || T <= 0){
+    
+    private double[] results;	
+    	
+	public PercolationStats(int N, int T) {     // perform T independent experiments on an N-by-N grid
+		if (N <= 0 || T <= 0) {
 			throw new java.lang.IllegalArgumentException();
 		}
 		
 		results = new double[T];
 		int squ = N * N;
 		
-		for( int i = 0; i < T; i++){
+		for (int i = 0; i < T; i++) {
 			Percolation perc = new Percolation(N);
 			
 			int opened = 0;
-			while(perc.percolates() == false){		
+			while (!perc.percolates()) {		
 				int[] xy = inverse(StdRandom.uniform(squ), N); 
-				if(perc.isOpen(xy[0], xy[1]) == false){
+				if (!perc.isOpen(xy[0], xy[1])) {
 					perc.open(xy[0], xy[1]);
-					opened ++;
+					opened++;
 				}
 			}
 			
-			results[i] = (float)opened / squ;
+			results[i] = (float) opened / squ;
 		}
 	}
 	
-	public double mean(){                     // sample mean of percolation threshold
+	private static int[] inverse(int index, int size) {
+	    int[] result = {index/size + 1, index % size + 1};
+	    return result;
+	}
+	
+	public double mean() {                     // sample mean of percolation threshold
 		return StdStats.mean(results);
 	}
 	
-	public double stddev(){
+	public double stddev() {
 		// sample standard deviation of percolation threshold
 		return StdStats.stddev(results);
 	}
 	
-	public double confidenceLo(){
+	public double confidenceLo() {
 	   // low  endpoint of 95% confidence interval
 	   return mean() - 1.96 * stddev() / Math.sqrt(results.length);
 	}
    
-	public double confidenceHi(){
+	public double confidenceHi() {
 		// high endpoint of 95% confidence interval
 		return mean() + 1.96 * stddev() / Math.sqrt(results.length);
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		// test client (described below)	
 		int firstArg = 0;
 		int secondArg = 0;
