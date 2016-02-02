@@ -26,7 +26,7 @@ public class PercolationStats {
 				}
 			}
 			
-			results[i] = (float) opened / squ;
+			results[i] = (double) opened / squ;
 		}
 	}
 	
