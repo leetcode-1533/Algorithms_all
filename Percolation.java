@@ -4,18 +4,19 @@ import edu.princeton.cs.algs4.StdOut;
 public class Percolation {
 	private WeightedQuickUnionUF container; // the container
 	private int size; // the global size
+	private boolean[] isopen; // 0 ~ ( N - 1)
 	
 	// No checking, use with cares
 	private int center(int i, int j) {
-		return (i - 1) * size + j;
+		return (i - 1) * size + j - 1;
 	}
 	
 	private int up(int i, int j) {
-		return (i - 2) * size + j;
+		return (i - 2) * size + j - 1;
 	}
 	
 	private int down(int i, int j) {
-		return i * size + j;
+		return i * size + j - 1;
 	}
 	
 	private int left(int i, int j) {
@@ -23,17 +24,18 @@ public class Percolation {
 	}
 	
 	private int right(int i, int j) {
-		return (i - 1) * size + j + 1;
+		return (i - 1) * size + j;
 	}
 	
 	public Percolation(int N) {
 		// The constructor
-		size = N;
-		
 		if(N <= 0){
 			throw new java.lang.IllegalArgumentException();
 		}
 		
+		size = N;
+		isopen = new boolean[size*size];
+	
 		container = new WeightedQuickUnionUF(N*N);		
 	}
 	
@@ -44,18 +46,22 @@ public class Percolation {
 		
 		if( i > 1) { // Have above
 			container.union(up(i, j), center(i, j));
+			isopen[center(i, j)] = true;
 		}
 		
 		if( i < size) { // Have below
 			container.union(down(i, j), center(i, j));
+			isopen[center(i, j)] = true;
 		}
 		
 		if( j > 1) { // Have left
 			container.union(left(i, j), center(i, j));
+			isopen[center(i, j)] = true;
 		}
 		
 		if( j < size) { // Have right
 			container.union(right(i, j), center(i, j));
+			isopen[center(i, j)] = true;
 		}
 	}
 	
@@ -82,22 +88,41 @@ public class Percolation {
 		
 		int curid = container.find(center(i, j));
 		
-		for( int ind = 1; ind <= size; ind ++){ 
-			int targetid = container.find(center(1, ind));
-			
-			if( curid == targetid){ // Return true if connected, else continue
-				return true;
+		for( int ind = 1; ind <= size; ind ++){ 		
+			if( entrance[ind - 1] == true){
+				int targetid = container.find(center(1, ind));
+	
+				if( curid == targetid){ // Return true if connected, else continue
+					return true;
+				}
 			}
 		}
 		return false; // Not connected
 	}
 	
-	public boolean percolates() {
-		return true;		
+	public boolean percolates() {		
+		for( int ind = 1; ind <= size; ind++){
+			if( entrance[ind - 1] == true){
+				int eid = container.find( center( 1, ind));
+				
+				for( int inn = 1; inn <= size; inn++){
+					if( out[ind - 1] == true){
+						if( eid == container.find(center(size, inn)));
+							return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	public static void main(String[] args) {
 		StdOut.println("Hello Algorithm");
-		new Percolation(5);	
+		Percolation test = new Percolation(4);	
+		test.open(1, 1);
+		test.open(2, 1);
+		test.open(3, 1);
+		
+		StdOut.println(test.isFull(4, 4));
 	}
 }
