@@ -7,6 +7,20 @@ public class Percolation {
     private int size; // the global size
     private boolean[] isopen; // 0 ~ ( N - 1)
 
+    public Percolation(int N) {
+        // The constructor
+        if (N <= 0) {
+            throw new java.lang.IllegalArgumentException();
+        }
+
+        size = N;
+        isopen = new boolean[size*size];
+
+        container = new WeightedQuickUnionUF(N*N + 1);	
+        temp = new WeightedQuickUnionUF(N*N + 2);  
+
+    }
+    
     // No checking, use with cares
     private int center(int i, int j) {
         return (i - 1) * size + j - 1;
@@ -28,20 +42,6 @@ public class Percolation {
         return (i - 1) * size + j;
     }
 
-    public Percolation(int N) {
-        // The constructor
-        if(N <= 0){
-            throw new java.lang.IllegalArgumentException();
-        }
-
-        size = N;
-        isopen = new boolean[size*size];
-
-        container = new WeightedQuickUnionUF(N*N + 1);	
-        temp = new WeightedQuickUnionUF(N*N + 2);  
-
-    }
-
     public void open(int i, int j) {
         if (i <= 0 || i > size || j <= 0 || j > size) {
             throw new java.lang.IndexOutOfBoundsException();
@@ -49,14 +49,14 @@ public class Percolation {
 
         isopen[center(i, j)] = true;
   
-        if(i == 1) {
+        if (i == 1) {
             temp.union(center(i, j), center(size, size + 1));
         }   
-        if(i == size) {
+        if (i == size) {
             temp.union(center(i, j), center(size, size + 2));  
         }
         
-        if(i == 1){
+        if (i == 1) {
             container.union(center(i, j), center(size, size + 1));
         }
         
@@ -66,24 +66,24 @@ public class Percolation {
             temp.union(up(i, j), center(i, j));
         }
 
-        if(i < size && isOpen(i + 1, j)) { // Have below
-            container.union(down( i, j), center(i, j));
+        if (i < size && isOpen(i + 1, j)) { // Have below
+            container.union(down(i, j), center(i, j));
             temp.union(down(i, j), center(i, j));
         }
 
-        if(j > 1 && isOpen(i, j - 1)) { // Have left
+        if (j > 1 && isOpen(i, j - 1)) { // Have left
             container.union(left(i, j), center(i, j));
             temp.union(left(i, j), center(i, j));
         }
 
-        if(j < size && isOpen(i, j + 1)) { // Have right
+        if (j < size && isOpen(i, j + 1)) { // Have right
             container.union(right(i, j), center(i, j));
             temp.union(right(i, j), center(i, j));
         }
     }
 
     public boolean isOpen(int i, int j) {
-        if(i <= 0 || i > size || j <= 0 || j > size) {
+        if (i <= 0 || i > size || j <= 0 || j > size) {
             throw new java.lang.IndexOutOfBoundsException();
         }
 
@@ -91,11 +91,11 @@ public class Percolation {
     }
 
     public boolean isFull(int i, int j) {
-        if(i <= 0 || i > size || j <= 0 || j > size) {
+        if (i <= 0 || i > size || j <= 0 || j > size) {
             throw new java.lang.IndexOutOfBoundsException();
         }
 
-        if(isOpen(i, j) == false){
+        if (!isOpen(i, j)) {
             return false;
         }
         
