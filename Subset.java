@@ -5,15 +5,21 @@ public class Subset {
     public static void main(String[] args){
         String input;
         RandomizedQueue<String> item = new RandomizedQueue<String>();
-        input = StdIn.readAll();
-        StdOut.println(input);
-//        
-//        while(!StdIn.isEmpty()){
-//            input = StdIn.readString();
-//            StdOut.println(input);
-//            item.enqueue(input);
-//            StdOut.println(StdIn.hasNextLine());
-//        }   
-        StdOut.print(item.size());
+        
+        Integer firstArg = 0;
+        try {
+            firstArg = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.err.println("Argument" + args[0] + " must be an integer.");
+            System.exit(1);
+        }
+        
+        input = StdIn.readLine();
+        String[] inputs = input.split(" ");
+        for (String s: inputs)
+            item.enqueue(s);
+               
+        for (int i = 0; i < firstArg; i ++)
+            StdOut.println(item.dequeue());
     }
 }
