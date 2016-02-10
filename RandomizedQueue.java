@@ -28,7 +28,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return N;
     }
     
-    public void enqueue(Item item){
+    public void enqueue(Item item) {
         if (item == null) {
             throw new NullPointerException();
         }
@@ -43,7 +43,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         items[N-1] = temp; // last one        
     }
     
-    public Item dequeue(){
+    public Item dequeue() {
         if (isEmpty()) throw new NoSuchElementException("Stack underflow");
         
         Item item = items[N-1];
@@ -54,7 +54,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return item;       
     }
     
-    public Item sample(){
+    public Item sample() {
         if (isEmpty()) throw new NoSuchElementException("Stack underflow");
         
         int loc = StdRandom.uniform(N);
@@ -64,17 +64,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private class RandomQueueIterator implements Iterator<Item> {       
         private int[] lookuptable;
         private int current;
-        private int creat_size;
+        private int Creat_Size;
         
         public RandomQueueIterator() {
             lookuptable = new int[N];        
-            for (int i = 0; i < N; i ++){
+            for (int i = 0; i < N; i++) {
                 lookuptable[i] = i;
             }
             
             StdRandom.shuffle(lookuptable);
             current = 0;
-            creat_size = N;
+            Creat_Size = N;
         }
         
         public void remove() {
@@ -82,24 +82,24 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
         
         public boolean hasNext() {
-            if (N != creat_size) throw new ConcurrentModificationException();
+            if (N != Creat_Size) throw new ConcurrentModificationException();
 
-            return (creat_size != current);         
+            return (Creat_Size != current);         
         }
         
         public Item next() {
             if (!hasNext()) throw new NoSuchElementException();
-            if (N != creat_size) throw new ConcurrentModificationException();
+            if (N != Creat_Size) throw new ConcurrentModificationException();
 
             return items[lookuptable[current++]];
         }        
     }
     
-    public Iterator<Item> iterator(){
+    public Iterator<Item> iterator() {
         return new RandomQueueIterator();      
     }
     
-    public static void main(String[] args){
+    public static void main(String[] args) {
     }
 }
 

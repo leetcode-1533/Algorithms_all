@@ -8,6 +8,10 @@ public class Dequetest {
         StdOut.println("Test methods");
         testmethods();
     }
+
+    public static void main(String[] args) {
+        new Dequetest();
+    }
     
     private void testmethods() {
         try { //constructor

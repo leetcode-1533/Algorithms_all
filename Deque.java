@@ -42,13 +42,13 @@ public class Deque<Item> implements Iterable<Item> {
             end = temp;
             front = temp;
         }
-        else{
+        else {
             Node temp = new Node(item, null, front); // first doesn't have next
             front.next = temp;
             front = temp;
         }  
         
-        N ++;
+        N++;
     }
     
     public void addLast(Item item) {
@@ -61,13 +61,13 @@ public class Deque<Item> implements Iterable<Item> {
             end = temp;
             front = temp;
         }
-        else{
+        else {
             Node temp = new Node(item, end, null); // last doesn't have before
             end.before = temp;
             end = temp;
         }     
         
-        N ++;
+        N++;
     }
     
     public Item removeFirst() {
@@ -75,9 +75,9 @@ public class Deque<Item> implements Iterable<Item> {
             throw new java.util.NoSuchElementException();
         }
         
-        N --;
+        N--;
         
-        if ( front == end ) {
+        if (front == end) {
             Node temp = front;
             
             front = null;
@@ -98,7 +98,7 @@ public class Deque<Item> implements Iterable<Item> {
             throw new java.util.NoSuchElementException();
         }
         
-        N --;
+        N--;
         
         if (front == end) {
             Node temp = front;
@@ -116,7 +116,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
     
-    private class dequeueIterator implements Iterator<Item> {
+    private class DequeueIterator implements Iterator<Item> {
         // hasNext, next, remove
         private Node current = front;
                 
@@ -138,7 +138,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
     
     public Iterator<Item> iterator() {
-        return new dequeueIterator();
+        return new DequeueIterator();
     }
     
     public static void main(String[] args) {

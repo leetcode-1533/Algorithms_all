@@ -9,6 +9,10 @@ public class RandomizedQueuetest {
         exceptionstests();    
     }
     
+    public static void main(String[] args) {
+        new RandomizedQueuetest();
+    }
+    
     private void methodtests() {
         try { //constructor
             RandomizedQueue<Integer> item = new RandomizedQueue<Integer>();  
