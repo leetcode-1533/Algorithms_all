@@ -1,9 +1,6 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdIn;
-
 public class Deque<Item> implements Iterable<Item> {
     private int N;
     private Node front;
@@ -52,7 +49,6 @@ public class Deque<Item> implements Iterable<Item> {
         }  
         
         N ++;
-
     }
     
     public void addLast(Item item) {
@@ -72,7 +68,6 @@ public class Deque<Item> implements Iterable<Item> {
         }     
         
         N ++;
-
     }
     
     public Item removeFirst() {
@@ -125,7 +120,7 @@ public class Deque<Item> implements Iterable<Item> {
         // hasNext, next, remove
         private Node current = front;
                 
-        public void remove(){
+        public void remove() {
             throw new UnsupportedOperationException();
         }
         
@@ -147,19 +142,21 @@ public class Deque<Item> implements Iterable<Item> {
     }
     
     public static void main(String[] args) {
-        Deque<Integer> test = new Deque<Integer>();
-        test.addFirst(5);
-        test.addFirst(6);
-//        
-        test.removeLast();
+        Dequetest test = new Dequetest();
+//        Deque<Integer> test = new Deque<Integer>();
+//        test.addFirst(5);
+//        test.addFirst(6);
+////        
 //        test.removeLast();
- 
-        Iterator<Integer> iter = test.iterator(); 
-        while(iter.hasNext()){
-            StdOut.println(test.size());
-            StdOut.println(iter.next());
-        }
-//        for (Integer temp : test)
-//            StdOut.println(temp);
+////        test.removeLast();
+// 
+//        Iterator<Integer> iter = test.iterator(); 
+//        while(iter.hasNext()){
+//            StdOut.println(test.size());
+//            StdOut.println(iter.next());
+//        }
+////        for (Integer temp : test)
+////            StdOut.println(temp);
     }
 }
+
