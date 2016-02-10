@@ -142,21 +142,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
     
     public static void main(String[] args) {
-        Dequetest test = new Dequetest();
-//        Deque<Integer> test = new Deque<Integer>();
-//        test.addFirst(5);
-//        test.addFirst(6);
-////        
-//        test.removeLast();
-////        test.removeLast();
-// 
-//        Iterator<Integer> iter = test.iterator(); 
-//        while(iter.hasNext()){
-//            StdOut.println(test.size());
-//            StdOut.println(iter.next());
-//        }
-////        for (Integer temp : test)
-////            StdOut.println(temp);
+        new Dequetest();
     }
 }
 
