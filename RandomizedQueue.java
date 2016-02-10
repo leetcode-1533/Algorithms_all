@@ -1,4 +1,3 @@
-import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -8,17 +7,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private Item[] items;
     private int N;
     
+    public RandomizedQueue() {
+        items = (Item[]) new Object[2];
+        N = 0;
+    }
+    
     private void resize(int capacity) {
         Item[] temp = (Item[]) new Object[capacity];
         for (int i = 0; i < N; i++) {
             temp[i] = items[i];
         }        
         items = temp;
-    }
-    
-    public RandomizedQueue() {
-        items = (Item[]) new Object[2];
-        N = 0;
     }
     
     public boolean isEmpty() {
@@ -30,6 +29,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
     
     public void enqueue(Item item){
+        if (item == null) {
+            throw new NullPointerException();
+        }
+        
         if (N == items.length) resize(2*N);
    
         items[N++] = item;
@@ -52,18 +55,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
     
     public Item sample(){
+        if (isEmpty()) throw new NoSuchElementException("Stack underflow");
+        
         int loc = StdRandom.uniform(N);
         return items[loc];
     }
     
-    private class RandomQueueIterator implements Iterator<Item> {
-        
+    private class RandomQueueIterator implements Iterator<Item> {       
         private int[] lookuptable;
         private int current;
         private int creat_size;
         
         public RandomQueueIterator() {
-            lookuptable = new int[N];           
+            lookuptable = new int[N];        
+            for (int i = 0; i < N; i ++){
+                lookuptable[i] = i;
+            }
+            
             StdRandom.shuffle(lookuptable);
             current = 0;
             creat_size = N;
@@ -92,24 +100,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
     
     public static void main(String[] args){
-        
+        new RandomizedQueuetest();    
     }
 }
 
-class RandomizedQueuetest {
-    public RandomizedQueuetest() {
-        StdOut.println("Methods tests");
-        methodtests();
-        
-        StdOut.println("Exceptions tests");
-        exceptionstests();    
-    }
-    
-    private void methodtests() {
-        
-    }
-    
-    private void exceptionstests() {
-        
-    }
-}
