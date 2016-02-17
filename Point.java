@@ -77,7 +77,7 @@ public class Point implements Comparable<Point> {
                 return +0.0;
             }
             else {
-                return (this.y - that.y) / (this.x - that.x); 
+                return ((double)this.y - (double)that.y) / ((double)this.x - (double)that.x); 
             }
         }
     }
@@ -174,9 +174,10 @@ public class Point implements Comparable<Point> {
         for (Point p : points) {
             p.draw();
         }
-        StdDraw.show();
         Comparator<Point> test = points[0].slopeOrder();
         Arrays.sort(points,test);
-        StdOut.println(points[0].slopeTo(points[1]));
+        
+        StdDraw.show();
+        StdOut.println(points[0].slopeTo(new Point(3,3)));
         }    
 }

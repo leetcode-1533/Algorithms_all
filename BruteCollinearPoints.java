@@ -72,7 +72,7 @@ public class BruteCollinearPoints {
         StdDraw.show();
         Comparator<Point> test = points[0].slopeOrder();
         Arrays.sort(points,test);
-        StdOut.println(points[0].slopeTo(points[1]));
+        StdOut.println(points[0].slopeTo(points[3]));
     } 
 }
 
