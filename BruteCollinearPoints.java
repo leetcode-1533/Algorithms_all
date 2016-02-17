@@ -14,7 +14,7 @@ public class BruteCollinearPoints {
             throw new NullPointerException();
         
         int len = points.length;
-        segments = new LineSegment[(len * (len - 1)) / 2];
+        LineSegment[] temp = new LineSegment[10000];
         
         Arrays.sort(points);
         
@@ -27,25 +27,38 @@ public class BruteCollinearPoints {
         for(int i = 0; i < len; i++) {
             if(points[i] == null)
                 throw new NullPointerException();        
-            for(int j = 1; j < len; j++) {
-                for(int m = 2; m < len; m++) {
-                    for(int n = 3; n < len; n++) {
-                        if(points[i].slopeTo(points[j]) == points[m].slopeTo(points[n])) {
-                            segments[index++] = new LineSegment(points[i],points[n]);
+            for(int j = i + 1; j < len; j++) {
+                for(int m = j + 1; m < len; m++) {
+                    for(int n = m + 1; n < len; n++) {
+                        double item1 = points[i].slopeTo(points[j]);
+                        double item2 = points[m].slopeTo(points[n]);
+                        double item3 = points[j].slopeTo(points[m]);
+                        
+                        if(item1 == item2 & item2 == item3) { 
+//                            points[i].drawTo(points[j]);
+//                            StdDraw.show();
+//                            points[m].drawTo(points[n]);
+//                            StdDraw.show();
+                            temp[index++] = new LineSegment(points[i],points[n]);
                         }                        
                     }
                 }
             }
         }
+        // shrink
+        this.segments = new LineSegment[index];
+        for(int i = 0; i < index; i++) {
+            this.segments[i] = temp[i];
+        }    
     }
     public int numberOfSegments() {
         // the number of line segments
-        return segments.length;
+        return this.segments.length;
     }
     
     public LineSegment[] segments() {
         // the line segments
-        return segments;
+        return this.segments;
     }
     
     /**
@@ -70,9 +83,13 @@ public class BruteCollinearPoints {
         for (Point p : points) {
             p.draw();
         }
-        BruteCollinearPoints bfSs = new BruteCollinearPoints(points);
+        BruteCollinearPoints bfs = new BruteCollinearPoints(points);
+        LineSegment[] test = bfs.segments();
+        for (int i = 0; i < test.length; i++) {
+            test[i].draw();
+            StdDraw.show();
+        }
         StdDraw.show();
-
     } 
 }
 
