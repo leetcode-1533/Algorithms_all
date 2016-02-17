@@ -10,6 +10,7 @@
 
 import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Point implements Comparable<Point> {
 
@@ -60,6 +61,22 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
         /* YOUR CODE HERE */
+        if(this.y == that.y) {
+            if(this.x == that.x) {
+                return Double.NEGATIVE_INFINITY;
+            }
+            else {
+                return Double.POSITIVE_INFINITY;
+            }
+        }
+        else {
+            if(this.x == that.x) {
+                return +0.0;
+            }
+            else {
+                return (this.y - that.y) / (this.x - that.x); 
+            }
+        }
     }
 
     /**
@@ -76,8 +93,12 @@ public class Point implements Comparable<Point> {
      */
     public int compareTo(Point that) {
         /* YOUR CODE HERE */
+        if(this.y == that.y) {
+            return this.x - that.x;
+        } else {
+            return this.y - that.y;
+        }
     }
-
     /**
      * Compares two points by the slope they make with this point.
      * The slope is defined as in the slopeTo() method.
@@ -86,7 +107,34 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
+        // local class
+        class SlopeOrder implements Comparator<Point> {
+            public int compare(Point p1, Point p2) {
+                double p1r = slopeTo(p1);
+                double p2r = slopeTo(p2);
+                if(p1r == Double.NEGATIVE_INFINITY || p2r == Double.NEGATIVE_INFINITY) {
+                    return (int) Double.NEGATIVE_INFINITY;
+                }
+                else if(p1r == 0.0) { 
+                    return (int) p2r;
+                }
+                else if(p1r == Double.POSITIVE_INFINITY) {
+                    if(p2r == Double.POSITIVE_INFINITY)
+                        return (int) Double.POSITIVE_INFINITY;
+                    else
+                        return 1;
+                }
+                else {
+                    if(p2r == Double.POSITIVE_INFINITY)
+                        return -1;
+                    else
+                        return (int)(p1r - p2r);
+                }                          
+            }
+        }
+        return new SlopeOrder();
     }
+
 
 
     /**
@@ -106,5 +154,7 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */
+        StdOut.println("Ass3");
     }
+       
 }
