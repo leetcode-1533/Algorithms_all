@@ -14,7 +14,7 @@ public class BruteCollinearPoints {
             throw new NullPointerException();
         
         int len = points.length;
-        segments = new LineSegment[len/4];
+        segments = new LineSegment[(len * (len - 1)) / 2];
         
         Arrays.sort(points);
         
@@ -23,6 +23,7 @@ public class BruteCollinearPoints {
                 throw new IllegalArgumentException();                
         }
         int index = 0;
+        
         for(int i = 0; i < len; i++) {
             if(points[i] == null)
                 throw new NullPointerException();        
@@ -69,10 +70,9 @@ public class BruteCollinearPoints {
         for (Point p : points) {
             p.draw();
         }
+        BruteCollinearPoints bfSs = new BruteCollinearPoints(points);
         StdDraw.show();
-        Comparator<Point> test = points[0].slopeOrder();
-        Arrays.sort(points,test);
-        StdOut.println(points[0].slopeTo(points[3]));
+
     } 
 }
 

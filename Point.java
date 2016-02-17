@@ -178,6 +178,6 @@ public class Point implements Comparable<Point> {
         Arrays.sort(points,test);
         
         StdDraw.show();
-        StdOut.println(points[0].slopeTo(new Point(3,3)));
+        StdOut.println(points[0].slopeTo(points[2]));
         }    
 }
