@@ -33,38 +33,36 @@ public class FastCollinearPoints {
         int inc;
         Point[] ext;
         
-        Point[] temp_p = new Point[len];
-        for(int i = 0; i < len; i++)
-            temp_p[i] = points[i];
+        Point[] copy_p = points.clone();
         
         for(int i = 0; i < len; i++) {
             Arrays.sort(points);
-            Arrays.sort(points, temp_p[i].slopeOrder());
+            Arrays.sort(points, copy_p[i].slopeOrder());
             
-            current_slope = temp_p[i].slopeTo(points[0]);
+            current_slope = copy_p[i].slopeTo(points[0]);
             inc = 0;            
 //            StdOut.println();
             int j = 1;
 //            StdOut.printf("Point %d\n", i);
             for(j = 1; j < len; j++) {
-                double t_slope = temp_p[i].slopeTo(points[j]);
+                double t_slope = copy_p[i].slopeTo(points[j]);
 //                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
                 if(t_slope == current_slope) {
                     inc++;
                 } 
                 else {
-                    current_slope = temp_p[i].slopeTo(points[j]);                            
+                    current_slope = copy_p[i].slopeTo(points[j]);                            
                     if(inc >= 3) {
                         // stable sort
-                        if(points[j - 1].compareTo(temp_p[i]) < 0 & points[j - inc].compareTo(temp_p[i]) < 0) {
-                            ext = find_ext(temp_p[i], points[j - inc]);
-                        } else if(points[j - 1].compareTo(temp_p[i]) > 0 & points[j - inc].compareTo(temp_p[i]) > 0) {
-                            ext = find_ext(temp_p[i], points[j - 1]);                   
+                        if(points[j - 1].compareTo(copy_p[i]) < 0 & points[j - inc].compareTo(copy_p[i]) < 0) {
+                            ext = find_ext(copy_p[i], points[j - inc]);
+                        } else if(points[j - 1].compareTo(copy_p[i]) > 0 & points[j - inc].compareTo(copy_p[i]) > 0) {
+                            ext = find_ext(copy_p[i], points[j - 1]);                   
                         }
                         else {
                             ext = find_ext(points[j - inc], points[j - 1]);
                         }
-                        if(ext[0].slopeTo(temp_p[i]) == Double.NEGATIVE_INFINITY) {
+                        if(ext[0].slopeTo(copy_p[i]) == Double.NEGATIVE_INFINITY) {
                             temp.add(new LineSegment(ext[0], ext[1]));                       
                         }
                     }     
@@ -74,15 +72,15 @@ public class FastCollinearPoints {
             
             if(inc >= 3) {
                 // stable sort
-                if(points[j - 1].compareTo(temp_p[i]) < 0 & points[j - inc].compareTo(temp_p[i]) < 0) {
-                    ext = find_ext(temp_p[i], points[j - inc]);
-                } else if(points[j - 1].compareTo(temp_p[i]) > 0 & points[j - inc].compareTo(temp_p[i]) > 0) {
-                    ext = find_ext(temp_p[i], points[j - 1]);                   
+                if(points[j - 1].compareTo(copy_p[i]) < 0 & points[j - inc].compareTo(copy_p[i]) < 0) {
+                    ext = find_ext(copy_p[i], points[j - inc]);
+                } else if(points[j - 1].compareTo(copy_p[i]) > 0 & points[j - inc].compareTo(copy_p[i]) > 0) {
+                    ext = find_ext(copy_p[i], points[j - 1]);                   
                 }
                 else {
                     ext = find_ext(points[j - inc], points[j - 1]);
                 }
-                if(ext[0].slopeTo(temp_p[i]) == Double.NEGATIVE_INFINITY) {
+                if(ext[0].slopeTo(copy_p[i]) == Double.NEGATIVE_INFINITY) {
                     temp.add(new LineSegment(ext[0], ext[1]));                       
                 }
             }                          
@@ -97,7 +95,7 @@ public class FastCollinearPoints {
     
     public LineSegment[] segments() {
         // the line segments
-        return this.segments;
+        return this.segments.clone();
     }
     
     private Point[] find_ext(Point p1, Point p2) {
