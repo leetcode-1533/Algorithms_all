@@ -14,9 +14,12 @@ public class FastCollinearPoints {
         
         int len = points.length;
         
+
 //        LineSegment[] temp = new LineSegment[10000];
         ArrayList<LineSegment> temp = new ArrayList<LineSegment>();
-        Arrays.sort(points);
+        
+        Point[] temp_p = points.clone(); // replacing points
+        Arrays.sort(temp_p);
         
 //        for (Point p : points) {
 //            p.draw();
@@ -28,7 +31,6 @@ public class FastCollinearPoints {
                 throw new IllegalArgumentException();                
         }
         
-        int index = 0;        
         double current_slope;
         int inc;
         Point[] ext;
@@ -36,31 +38,31 @@ public class FastCollinearPoints {
         Point[] copy_p = points.clone();
         
         for(int i = 0; i < len; i++) {
-            Arrays.sort(points);
-            Arrays.sort(points, copy_p[i].slopeOrder());
+            Arrays.sort(temp_p);
+            Arrays.sort(temp_p, temp_p[i].slopeOrder()); // stable merge sort
             
-            current_slope = copy_p[i].slopeTo(points[0]);
+            current_slope = copy_p[i].slopeTo(temp_p[0]);
             inc = 0;            
 //            StdOut.println();
             int j = 1;
 //            StdOut.printf("Point %d\n", i);
             for(j = 1; j < len; j++) {
-                double t_slope = copy_p[i].slopeTo(points[j]);
+                double t_slope = copy_p[i].slopeTo(temp_p[j]);
 //                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
                 if(t_slope == current_slope) {
                     inc++;
                 } 
                 else {
-                    current_slope = copy_p[i].slopeTo(points[j]);                            
+                    current_slope = t_slope;                            
                     if(inc >= 3) {
                         // stable sort
-                        if(points[j - 1].compareTo(copy_p[i]) < 0 && points[j - inc].compareTo(copy_p[i]) < 0) {
-                            ext = find_ext(copy_p[i], points[j - inc]);
-                        } else if(points[j - 1].compareTo(copy_p[i]) > 0 && points[j - inc].compareTo(copy_p[i]) > 0) {
-                            ext = find_ext(copy_p[i], points[j - 1]);                   
+                        if(temp_p[j - 1].compareTo(copy_p[i]) < 0 && temp_p[j - inc].compareTo(copy_p[i]) < 0) {
+                            ext = find_ext(copy_p[i], temp_p[j - inc]);
+                        } else if(temp_p[j - 1].compareTo(copy_p[i]) > 0 && temp_p[j - inc].compareTo(copy_p[i]) > 0) {
+                            ext = find_ext(copy_p[i], temp_p[j - 1]);                   
                         }
                         else {
-                            ext = find_ext(points[j - inc], points[j - 1]);
+                            ext = find_ext(temp_p[j - inc], temp_p[j - 1]);
                         }
                         if(ext[0].slopeTo(copy_p[i]) == Double.NEGATIVE_INFINITY) {
                             temp.add(new LineSegment(ext[0], ext[1]));                       
@@ -72,13 +74,13 @@ public class FastCollinearPoints {
             
             if(inc >= 3) {
                 // stable sort
-                if(points[j - 1].compareTo(copy_p[i]) < 0 & points[j - inc].compareTo(copy_p[i]) < 0) {
-                    ext = find_ext(copy_p[i], points[j - inc]);
-                } else if(points[j - 1].compareTo(copy_p[i]) > 0 & points[j - inc].compareTo(copy_p[i]) > 0) {
-                    ext = find_ext(copy_p[i], points[j - 1]);                   
+                if(temp_p[j - 1].compareTo(copy_p[i]) < 0 && temp_p[j - inc].compareTo(copy_p[i]) < 0) {
+                    ext = find_ext(copy_p[i], temp_p[j - inc]);
+                } else if(temp_p[j - 1].compareTo(copy_p[i]) > 0 && temp_p[j - inc].compareTo(copy_p[i]) > 0) {
+                    ext = find_ext(copy_p[i], temp_p[j - 1]);                   
                 }
                 else {
-                    ext = find_ext(points[j - inc], points[j - 1]);
+                    ext = find_ext(temp_p[j - inc], temp_p[j - 1]);
                 }
                 if(ext[0].slopeTo(copy_p[i]) == Double.NEGATIVE_INFINITY) {
                     temp.add(new LineSegment(ext[0], ext[1]));                       

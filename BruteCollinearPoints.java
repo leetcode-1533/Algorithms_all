@@ -16,9 +16,9 @@ public class BruteCollinearPoints {
         int len = points.length;
 //        LineSegment[] temp = new LineSegment[10000];
         ArrayList<LineSegment> temp = new ArrayList<LineSegment>();
-
+        Point[] local_p = points.clone();
         
-        Arrays.sort(points);
+        Arrays.sort(local_p);
         
 //        for (Point p : points) {
 //            p.draw();
@@ -29,20 +29,19 @@ public class BruteCollinearPoints {
             if(points[i].compareTo(points[i + 1]) == 0)
                 throw new IllegalArgumentException();                
         }
-        int index = 0;
         
         for(int i = 0; i < len; i++) {
-            if(points[i] == null)
+            if(local_p[i] == null)
                 throw new NullPointerException();        
             for(int j = i + 1; j < len; j++) {
                 for(int m = j + 1; m < len; m++) {
                     for(int n = m + 1; n < len; n++) {
-                        double item1 = points[i].slopeTo(points[j]);
-                        double item2 = points[m].slopeTo(points[n]);
-                        double item3 = points[j].slopeTo(points[m]);
+                        double item1 = local_p[i].slopeTo(local_p[j]);
+                        double item2 = local_p[m].slopeTo(local_p[n]);
+                        double item3 = local_p[j].slopeTo(local_p[m]);
                         
                         if(item1 == item2 & item2 == item3) { 
-                            temp.add(new LineSegment(points[i], points[n]));
+                            temp.add(new LineSegment(local_p[i], local_p[n]));
 //                            temp[index++] = new LineSegment(points[i],points[n]);
 //                            StdOut.println(points[i].toString() + points[j].toString() + points[m].toString() + points[n].toString());
 //                            temp[index - 1].draw();
