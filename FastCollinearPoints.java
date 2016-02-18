@@ -43,12 +43,12 @@ public class FastCollinearPoints {
             
             current_slope = clonepoints[i].slopeTo(copypoints[1]);
             inc = 0;            
-            StdOut.println();
+//            StdOut.println();
             int j = 1;
-            StdOut.printf("Point %d\n", i);
+//            StdOut.printf("Point %d\n", i);
             for(j = 1; j < len; j++) {
                 double t_slope = clonepoints[i].slopeTo(copypoints[j]);
-                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
+//                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
                 if(t_slope == current_slope && j < (len - 1)) {
                     inc++;
                 } 
@@ -75,6 +75,7 @@ public class FastCollinearPoints {
         // shrink
         this.segments = temparray.toArray(new LineSegment[0]);  
     }
+
     public int numberOfSegments() {
         // the number of line segments
         return this.segments.length;
