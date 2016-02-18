@@ -116,28 +116,40 @@ public class Point implements Comparable<Point> {
             public int compare(Point p1, Point p2) {
                 double p1r = slopeTo(p1);
                 double p2r = slopeTo(p2);
-                if(p1r == Double.NEGATIVE_INFINITY || p2r == Double.NEGATIVE_INFINITY) {
-                    return (int) Double.NEGATIVE_INFINITY;
+
+                if(p1r > p2r) {
+                    return 1;
                 }
-                else if(p1r == 0.0) { 
-                    return (int) p2r;
+                if(p1r == p2r) {
+                    return 0;
                 }
-                else if(p1r == Double.POSITIVE_INFINITY) {
-                    if(p2r == Double.POSITIVE_INFINITY)
-                        return (int) Double.POSITIVE_INFINITY;
-                    else
-                        return 1;
-                }
-                else {
-                    if(p2r == Double.POSITIVE_INFINITY)
-                        return -1;
-                    else
-                        return (int)(p1r - p2r);
-                }                          
+                return -1;
             }
         }
         return new SlopeOrder();
     }
+
+
+//                if(p1r == Double.NEGATIVE_INFINITY || p2r == Double.NEGATIVE_INFINITY) {
+//                    return (int) Double.NEGATIVE_INFINITY;
+//                }
+//                else if(p1r == 0.0) { 
+//                    return (int) p2r;
+//                }
+//                else if(p1r == Double.POSITIVE_INFINITY) {
+//                    if(p2r == Double.POSITIVE_INFINITY)
+//                        return (int) Double.POSITIVE_INFINITY;
+//                    else
+//                        return 1;
+//                }
+//                else {
+//                    if(p2r == Double.POSITIVE_INFINITY)
+//                        return -1;
+//                    else
+//                        return (int)(p1r - p2r);
+//                }                          
+//            }
+//        }
 
 
 

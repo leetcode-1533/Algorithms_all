@@ -13,7 +13,6 @@ public class FastCollinearPoints {
         
         int len = points.length;
         LineSegment[] temp = new LineSegment[10000];
-        
         Arrays.sort(points);
         
 //        for (Point p : points) {
@@ -29,29 +28,33 @@ public class FastCollinearPoints {
         int index = 0;        
         double current_slope;
         int inc;
+        Point[] temp_p = new Point[len];
+        for(int i = 0; i < len; i++)
+            temp_p[i] = points[i];
         
         for(int i = 0; i < len; i++) {
-            Arrays.sort(points, points[i].slopeOrder());
+            Arrays.sort(points);
+            Arrays.sort(points, temp_p[i].slopeOrder());
             
-            current_slope = points[i].slopeTo(points[0]);
+            current_slope = temp_p[i].slopeTo(points[0]);
             inc = 0;            
             StdOut.println();
             StdOut.printf("Point %d\n", i);
             for(int j = 0; j < len; j++) {
-                double t_slope = points[i].slopeTo(points[j]);
-                StdOut.printf("With %d, slope: %f\n", j, t_slope);
+                double t_slope = temp_p[i].slopeTo(points[j]);
+                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
                 if(t_slope == current_slope) {
                     inc++;
                 } 
                 else {
-                    current_slope = points[i].slopeTo(points[j]);         
+                    current_slope = temp_p[i].slopeTo(points[j]);         
                     
                     if(inc >= 4) {
                         // stable sort
-                        if(points[j - 1].compareTo(points[i]) < 0 & points[j - inc].compareTo(points[i]) < 0) {
-                            temp[index++] = new LineSegment(points[i], points[j - inc]);
-                        } else if(points[j - 1].compareTo(points[i]) > 0 & points[j - inc].compareTo(points[i]) > 0) {
-                            temp[index++] = new LineSegment(points[i], points[j - 1]);                   
+                        if(points[j - 1].compareTo(temp_p[i]) < 0 & points[j - inc].compareTo(temp_p[i]) < 0) {
+                            temp[index++] = new LineSegment(temp_p[i], points[j - inc]);
+                        } else if(points[j - 1].compareTo(temp_p[i]) > 0 & points[j - inc].compareTo(temp_p[i]) > 0) {
+                            temp[index++] = new LineSegment(temp_p[i], points[j - 1]);                   
                         }
                         else {
                             temp[index++] = new LineSegment(points[j - inc], points[j - 1]);
