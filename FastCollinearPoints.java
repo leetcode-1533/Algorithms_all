@@ -54,9 +54,9 @@ public class FastCollinearPoints {
                     current_slope = copy_p[i].slopeTo(points[j]);                            
                     if(inc >= 3) {
                         // stable sort
-                        if(points[j - 1].compareTo(copy_p[i]) < 0 & points[j - inc].compareTo(copy_p[i]) < 0) {
+                        if(points[j - 1].compareTo(copy_p[i]) < 0 && points[j - inc].compareTo(copy_p[i]) < 0) {
                             ext = find_ext(copy_p[i], points[j - inc]);
-                        } else if(points[j - 1].compareTo(copy_p[i]) > 0 & points[j - inc].compareTo(copy_p[i]) > 0) {
+                        } else if(points[j - 1].compareTo(copy_p[i]) > 0 && points[j - inc].compareTo(copy_p[i]) > 0) {
                             ext = find_ext(copy_p[i], points[j - 1]);                   
                         }
                         else {
