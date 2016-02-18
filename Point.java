@@ -73,12 +73,12 @@ public class Point implements Comparable<Point> {
                 return Double.NEGATIVE_INFINITY;
             }
             else {
-                return Double.POSITIVE_INFINITY;
+                return +0.0;
             }
         }
         else {
             if(this.x == that.x) {
-                return +0.0;
+                return Double.POSITIVE_INFINITY;
             }
             else {
                 double re = ((double)this.y - (double)that.y) / ((double)this.x - (double)that.x); 
@@ -179,6 +179,9 @@ public class Point implements Comparable<Point> {
         // read the N points from a file
         In in = new In(args[0]);
         int N = in.readInt();
+        Point ptest = new Point(206, 36);
+        StdOut.println(ptest.slopeTo(new Point(206, 449)));
+        
         Point[] points = new Point[N];
         
         for (int i = 0; i < N; i++) {
