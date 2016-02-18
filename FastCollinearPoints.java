@@ -48,13 +48,14 @@ public class FastCollinearPoints {
 //            StdOut.printf("Point %d\n", i);
             for(j = 1; j < len; j++) {
                 double t_slope = clonepoints[i].slopeTo(copypoints[j]);
-//                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
-                if(t_slope == current_slope && j < (len - 1)) {
+                
+//                StdOut.printf("length: %d, With %d, slope: %f, loc: %s\n", len, j, t_slope, points[j].toString());
+                if(t_slope == current_slope) {
                     inc++;
                 } 
                 else {
                     current_slope = t_slope;                            
-                    if(inc >= 3 || (j == (len - 1) && t_slope == current_slope && (inc + 1) >= 3)) {
+                    if(inc >= 3) {
                         // stable sort
                         if(copypoints[j - 1].compareTo(clonepoints[i]) < 0 && copypoints[j - inc].compareTo(clonepoints[i]) < 0) {
                             ext = find_ext(clonepoints[i], copypoints[j - inc]);
@@ -70,7 +71,22 @@ public class FastCollinearPoints {
                     }     
                     inc = 1;
                 }
-            }                          
+            }
+            // Tail condition
+            if(inc >= 3) {
+                // stable sort
+                if(copypoints[j - 1].compareTo(clonepoints[i]) < 0 && copypoints[j - inc].compareTo(clonepoints[i]) < 0) {
+                    ext = find_ext(clonepoints[i], copypoints[j - inc]);
+                } else if(copypoints[j - 1].compareTo(clonepoints[i]) > 0 && copypoints[j - inc].compareTo(clonepoints[i]) > 0) {
+                    ext = find_ext(clonepoints[i], copypoints[j - 1]);                   
+                }
+                else {
+                    ext = find_ext(copypoints[j - inc], copypoints[j - 1]);
+                }
+                if(ext[0].slopeTo(clonepoints[i]) == Double.NEGATIVE_INFINITY) {
+                    temparray.add(new LineSegment(ext[0], ext[1]));                       
+                }
+            } 
         }
         // shrink
         this.segments = temparray.toArray(new LineSegment[0]);  
