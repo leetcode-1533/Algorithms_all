@@ -13,10 +13,13 @@ public class FastCollinearPoints {
             throw new NullPointerException();
         
         int len = points.length;
-        
 
 //        LineSegment[] temp = new LineSegment[10000];
         ArrayList<LineSegment> temparray = new ArrayList<LineSegment>();
+        if(len < 4) {
+            this.segments = temparray.toArray(new LineSegment[0]); 
+            return;
+        }
         
         Point[] clonepoints = points.clone(); // replacing points
         Arrays.sort(clonepoints);
