@@ -20,11 +20,6 @@ public class BruteCollinearPoints {
         
         Arrays.sort(local_p);
         
-//        for (Point p : points) {
-//            p.draw();
-//            StdDraw.show();
-//        }
-        
         for(int i = 0; i < len - 1; i++) {
             if(points[i].compareTo(points[i + 1]) == 0)
                 throw new IllegalArgumentException();                

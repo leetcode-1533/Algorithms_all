@@ -16,10 +16,10 @@ public class FastCollinearPoints {
         
 
 //        LineSegment[] temp = new LineSegment[10000];
-        ArrayList<LineSegment> temp = new ArrayList<LineSegment>();
+        ArrayList<LineSegment> temparray = new ArrayList<LineSegment>();
         
-        Point[] temp_p = points.clone(); // replacing points
-        Arrays.sort(temp_p);
+        Point[] clonepoints = points.clone(); // replacing points
+        Arrays.sort(clonepoints);
         
 //        for (Point p : points) {
 //            p.draw();
@@ -27,7 +27,7 @@ public class FastCollinearPoints {
 //        }
         
         for(int i = 0; i < len - 1; i++) {
-            if(points[i].compareTo(points[i + 1]) == 0)
+            if(clonepoints[i].compareTo(clonepoints[i + 1]) == 0)
                 throw new IllegalArgumentException();                
         }
         
@@ -35,60 +35,45 @@ public class FastCollinearPoints {
         int inc;
         Point[] ext;
         
-        Point[] copy_p = temp_p.clone();
+        Point[] copypoints = clonepoints.clone();
         
         for(int i = 0; i < len; i++) {
-            Arrays.sort(copy_p);
-            Arrays.sort(copy_p, copy_p[i].slopeOrder()); // stable merge sort
+            Arrays.sort(copypoints);
+            Arrays.sort(copypoints, clonepoints[i].slopeOrder()); // stable merge sort
             
-            current_slope = temp_p[i].slopeTo(copy_p[0]);
+            current_slope = clonepoints[i].slopeTo(copypoints[1]);
             inc = 0;            
             StdOut.println();
             int j = 1;
             StdOut.printf("Point %d\n", i);
             for(j = 1; j < len; j++) {
-                double t_slope = copy_p[i].slopeTo(temp_p[j]);
+                double t_slope = clonepoints[i].slopeTo(copypoints[j]);
                 StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
-                if(t_slope == current_slope) {
+                if(t_slope == current_slope && j < (len - 1)) {
                     inc++;
                 } 
                 else {
                     current_slope = t_slope;                            
-                    if(inc >= 3) {
+                    if(inc >= 3 || (j == (len - 1) && t_slope == current_slope && (inc + 1) >= 3)) {
                         // stable sort
-                        if(temp_p[j - 1].compareTo(copy_p[i]) < 0 && temp_p[j - inc].compareTo(copy_p[i]) < 0) {
-                            ext = find_ext(copy_p[i], temp_p[j - inc]);
-                        } else if(temp_p[j - 1].compareTo(copy_p[i]) > 0 && temp_p[j - inc].compareTo(copy_p[i]) > 0) {
-                            ext = find_ext(copy_p[i], temp_p[j - 1]);                   
+                        if(copypoints[j - 1].compareTo(clonepoints[i]) < 0 && copypoints[j - inc].compareTo(clonepoints[i]) < 0) {
+                            ext = find_ext(clonepoints[i], copypoints[j - inc]);
+                        } else if(copypoints[j - 1].compareTo(clonepoints[i]) > 0 && copypoints[j - inc].compareTo(clonepoints[i]) > 0) {
+                            ext = find_ext(clonepoints[i], copypoints[j - 1]);                   
                         }
                         else {
-                            ext = find_ext(temp_p[j - inc], temp_p[j - 1]);
+                            ext = find_ext(copypoints[j - inc], copypoints[j - 1]);
                         }
-                        if(ext[0].slopeTo(copy_p[i]) == Double.NEGATIVE_INFINITY) {
-                            temp.add(new LineSegment(ext[0], ext[1]));                       
+                        if(ext[0].slopeTo(clonepoints[i]) == Double.NEGATIVE_INFINITY) {
+                            temparray.add(new LineSegment(ext[0], ext[1]));                       
                         }
                     }     
                     inc = 1;
                 }
-            }
-            
-            if(inc >= 3) {
-                // stable sort
-                if(temp_p[j - 1].compareTo(copy_p[i]) < 0 && temp_p[j - inc].compareTo(copy_p[i]) < 0) {
-                    ext = find_ext(copy_p[i], temp_p[j - inc]);
-                } else if(temp_p[j - 1].compareTo(copy_p[i]) > 0 && temp_p[j - inc].compareTo(copy_p[i]) > 0) {
-                    ext = find_ext(copy_p[i], temp_p[j - 1]);                   
-                }
-                else {
-                    ext = find_ext(temp_p[j - inc], temp_p[j - 1]);
-                }
-                if(ext[0].slopeTo(copy_p[i]) == Double.NEGATIVE_INFINITY) {
-                    temp.add(new LineSegment(ext[0], ext[1]));                       
-                }
             }                          
         }
         // shrink
-        this.segments = temp.toArray(new LineSegment[0]);  
+        this.segments = temparray.toArray(new LineSegment[0]);  
     }
     public int numberOfSegments() {
         // the number of line segments

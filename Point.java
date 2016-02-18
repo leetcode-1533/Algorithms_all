@@ -67,6 +67,7 @@ public class Point implements Comparable<Point> {
         if(that == null) {
             throw new NullPointerException();
         }
+        
         if(this.y == that.y) {
             if(this.x == that.x) {
                 return Double.NEGATIVE_INFINITY;
