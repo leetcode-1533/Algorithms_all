@@ -39,17 +39,17 @@ public class FastCollinearPoints {
             current_slope = temp_p[i].slopeTo(points[0]);
             inc = 0;            
             StdOut.println();
+            int j = 1;
             StdOut.printf("Point %d\n", i);
-            for(int j = 0; j < len; j++) {
+            for(j = 1; j < len; j++) {
                 double t_slope = temp_p[i].slopeTo(points[j]);
                 StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
                 if(t_slope == current_slope) {
                     inc++;
                 } 
                 else {
-                    current_slope = temp_p[i].slopeTo(points[j]);         
-                    
-                    if(inc >= 4) {
+                    current_slope = temp_p[i].slopeTo(points[j]);                            
+                    if(inc >= 3) {
                         // stable sort
                         if(points[j - 1].compareTo(temp_p[i]) < 0 & points[j - inc].compareTo(temp_p[i]) < 0) {
                             temp[index++] = new LineSegment(temp_p[i], points[j - inc]);
@@ -62,6 +62,17 @@ public class FastCollinearPoints {
                     }     
                     inc = 1;
                 }
+            }
+            if(inc >= 3) {
+                // stable sort
+                if(points[j - 1].compareTo(temp_p[i]) < 0 & points[j - inc].compareTo(temp_p[i]) < 0) {
+                    temp[index++] = new LineSegment(temp_p[i], points[j - inc]);
+                } else if(points[j - 1].compareTo(temp_p[i]) > 0 & points[j - inc].compareTo(temp_p[i]) > 0) {
+                    temp[index++] = new LineSegment(temp_p[i], points[j - 1]);                   
+                }
+                else {
+                    temp[index++] = new LineSegment(points[j - inc], points[j - 1]);
+                }                           
             }
         }
         // shrink
@@ -107,6 +118,7 @@ public class FastCollinearPoints {
         for (int i = 0; i < test.length; i++) {
             test[i].draw();
             StdDraw.show();
+            StdOut.println(test[i].toString());
         }
         StdDraw.show();
     } 
