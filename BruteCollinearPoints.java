@@ -1,5 +1,5 @@
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.ArrayList;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
@@ -14,7 +14,9 @@ public class BruteCollinearPoints {
             throw new NullPointerException();
         
         int len = points.length;
-        LineSegment[] temp = new LineSegment[10000];
+//        LineSegment[] temp = new LineSegment[10000];
+        ArrayList<LineSegment> temp = new ArrayList<LineSegment>();
+
         
         Arrays.sort(points);
         
@@ -40,20 +42,18 @@ public class BruteCollinearPoints {
                         double item3 = points[j].slopeTo(points[m]);
                         
                         if(item1 == item2 & item2 == item3) { 
-                            temp[index++] = new LineSegment(points[i],points[n]);
-                            StdOut.println(points[i].toString() + points[j].toString() + points[m].toString() + points[n].toString());
-                            temp[index - 1].draw();
-                            StdDraw.show();
+                            temp.add(new LineSegment(points[i], points[n]));
+//                            temp[index++] = new LineSegment(points[i],points[n]);
+//                            StdOut.println(points[i].toString() + points[j].toString() + points[m].toString() + points[n].toString());
+//                            temp[index - 1].draw();
+//                            StdDraw.show();
                         }                        
                     }
                 }
             }
         }
         // shrink
-        this.segments = new LineSegment[index];
-        for(int i = 0; i < index; i++) {
-            this.segments[i] = temp[i];
-        }    
+        this.segments = temp.toArray(new LineSegment[0]);
     }
     public int numberOfSegments() {
         // the number of line segments
@@ -92,6 +92,7 @@ public class BruteCollinearPoints {
         for (int i = 0; i < test.length; i++) {
             test[i].draw();
             StdDraw.show();
+            StdOut.println(test[i].toString());
         }
         StdDraw.show();
     } 
