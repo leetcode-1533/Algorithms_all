@@ -35,20 +35,20 @@ public class FastCollinearPoints {
         int inc;
         Point[] ext;
         
-        Point[] copy_p = points.clone();
+        Point[] copy_p = temp_p.clone();
         
         for(int i = 0; i < len; i++) {
-            Arrays.sort(temp_p);
-            Arrays.sort(temp_p, temp_p[i].slopeOrder()); // stable merge sort
+            Arrays.sort(copy_p);
+            Arrays.sort(copy_p, copy_p[i].slopeOrder()); // stable merge sort
             
-            current_slope = copy_p[i].slopeTo(temp_p[0]);
+            current_slope = temp_p[i].slopeTo(copy_p[0]);
             inc = 0;            
-//            StdOut.println();
+            StdOut.println();
             int j = 1;
-//            StdOut.printf("Point %d\n", i);
+            StdOut.printf("Point %d\n", i);
             for(j = 1; j < len; j++) {
                 double t_slope = copy_p[i].slopeTo(temp_p[j]);
-//                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
+                StdOut.printf("With %d, slope: %f, loc: %s\n", j, t_slope, points[j].toString());
                 if(t_slope == current_slope) {
                     inc++;
                 } 
