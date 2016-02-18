@@ -16,10 +16,6 @@ public class FastCollinearPoints {
 
 //        LineSegment[] temp = new LineSegment[10000];
         ArrayList<LineSegment> temparray = new ArrayList<LineSegment>();
-        if(len < 4) {
-            this.segments = temparray.toArray(new LineSegment[0]); 
-            return;
-        }
         
         Point[] clonepoints = points.clone(); // replacing points
         Arrays.sort(clonepoints);
@@ -27,11 +23,15 @@ public class FastCollinearPoints {
 //        for (Point p : points) {
 //            p.draw();
 //            StdDraw.show();
-//        }
-        
+//        }      
         for(int i = 0; i < len - 1; i++) {
             if(clonepoints[i].compareTo(clonepoints[i + 1]) == 0)
                 throw new IllegalArgumentException();                
+        }
+        
+        if(len < 4) {
+            this.segments = temparray.toArray(new LineSegment[0]); 
+            return;
         }
         
         double current_slope;
