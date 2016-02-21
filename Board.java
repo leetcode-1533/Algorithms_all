@@ -5,7 +5,7 @@ import java.lang.StringBuilder;
 
 
 public class Board {
-    public int[][] board;
+    private int[][] board;
     
     public Board(int[][] blocks) {
         // The constructor
@@ -199,6 +199,11 @@ public class Board {
             for (int j = 0; j < N; j++)
                 blocks[i][j] = in.readInt(); 
         Board initial = new Board(blocks);
+        Board twin = initial.twin();
+        
+        StdOut.println("Equals");
+        StdOut.println("To twins"+ initial.equals(twin));
+        StdOut.println("itself" + initial.equals(initial));
         
         StdOut.println("Mantest");
         StdOut.println(initial.manhattan());
