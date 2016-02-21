@@ -9,7 +9,7 @@ public class Board {
     public Board(int[][] blocks) {
         // The constructor
         //  clone is a shallow copy, kind of tricky :)
-        board = blocks.clone();
+        board = blocks.clone();        
         for(int i = 0; i < blocks.length; i++) 
             board[i] = blocks[i].clone();
     }
@@ -22,21 +22,42 @@ public class Board {
     private int ij2index(int i, int j) {
         return (i * dimension() + j + 1);
     }
-//    public int hamming() {
-//        // return the number of blocks out of position
-//        int miss = 0;
-//        for(int i = 0; i < dimension(); i++) {
-//            for(int j = 0; j < dimension(); j++) {
-//                if(board[i][j] != )
-//            }
-//        }
-//     
-//        return 0;
-//    }
+    
+    private int element_manhattan(int i, int j, int index) {
+        int ori_i = index / dimension();
+        int ori_j = index - ori_i * dimension() - 1;
+//        StdOut.printf("i %d, j %d\n", ori_i, ori_j);
+        int idistance = Math.abs(i - ori_i);
+        int jdistance = Math.abs(j - ori_j);
+        return idistance + jdistance;
+    }
+    
+    public int hamming() {
+        // return the number of blocks out of position
+        int miss = 0;
+        for(int i = 0; i < dimension(); i++) {
+            for(int j = 0; j < dimension(); j++) {
+                if(board[i][j] != 0 && board[i][j] != ij2index(i, j))
+                    miss++;
+            }
+        }
+        
+        return miss;
+    }
     
     public int manhattan() {
         // the sum of the Manhattan distances between the blocks and their goal positions.
-        return 0;
+        int miss = 0;
+        for(int i = 0; i < dimension(); i++) {
+            for(int j = 0; j < dimension(); j++) {
+                if(board[i][j] != 0 && board[i][j] != ij2index(i, j)) {
+                    miss += element_manhattan(i, j, board[i][j]);       
+//                    StdOut.printf("element %d, distance: %d \n", board[i][j], element_manhattan(i, j, board[i][j]));
+                }
+            }
+        }
+        
+        return miss;        
     }
     
     public boolean isGoal() {
@@ -181,8 +202,12 @@ public class Board {
             for (int j = 0; j < N; j++)
                 blocks[i][j] = in.readInt(); 
         Board initial = new Board(blocks);
+        StdOut.println("Mantest");
+        StdOut.println(initial.manhattan());
         
-        StdOut.println("Constructed Board:");
+        StdOut.printf("Hamming: %d\n", initial.hamming());
+        
+        StdOut.println("Constructed Board");
         StdOut.println(initial);
         
         StdOut.println("Is goal?");
@@ -196,7 +221,5 @@ public class Board {
         for(Board item : test) {
             StdOut.println(item.toString());
         }
-//        StdOut.println(initial.isGoal());
-//        StdOut.println(initial.equals(initial));
     }
 }
