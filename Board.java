@@ -1,6 +1,7 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Stack;
+import java.lang.StringBuilder;
 
 
 public class Board {
@@ -178,19 +179,15 @@ public class Board {
     }
     
     public String toString() {
-        // string representation
-        String print= Integer.toString(dimension());
-        
-        print += "\n";
-        for(int i = 0; i < dimension(); i++) {
-            print += " ";
-            for(int j = 0; j < dimension(); j++) {
-                print += Integer.toString(board[i][j]);
-                print += " ";
+        StringBuilder s = new StringBuilder();
+        s.append(dimension() + "\n");
+        for (int i = 0; i < dimension(); i++) {
+            for (int j = 0; j < dimension(); j++) {
+                s.append(String.format("%2d ", board[i][j]));
             }
-            print += "\n";
+            s.append("\n");
         }
-        return print;
+        return s.toString();
     }
     
     public static void main(String[] args) {
@@ -202,6 +199,7 @@ public class Board {
             for (int j = 0; j < N; j++)
                 blocks[i][j] = in.readInt(); 
         Board initial = new Board(blocks);
+        
         StdOut.println("Mantest");
         StdOut.println(initial.manhattan());
         
