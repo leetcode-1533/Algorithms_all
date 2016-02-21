@@ -25,7 +25,7 @@ public class Board {
     }
     
     private int element_manhattan(int i, int j, int index) {
-        int ori_i = index / dimension();
+        int ori_i = (index - 1) / dimension();
         int ori_j = index - ori_i * dimension() - 1;
 //        StdOut.printf("i %d, j %d\n", ori_i, ori_j);
         int idistance = Math.abs(i - ori_i);
@@ -52,6 +52,7 @@ public class Board {
         for(int i = 0; i < dimension(); i++) {
             for(int j = 0; j < dimension(); j++) {
                 if(board[i][j] != 0 && board[i][j] != ij2index(i, j)) {
+//                    StdOut.println("Manhattan on i:" + i + " j: " + j + " Value: " + board[i][j] + " distance: " + element_manhattan(i, j, board[i][j]));
                     miss += element_manhattan(i, j, board[i][j]);       
 //                    StdOut.printf("element %d, distance: %d \n", board[i][j], element_manhattan(i, j, board[i][j]));
                 }
@@ -203,7 +204,7 @@ public class Board {
         
         StdOut.println("Equals");
         StdOut.println("To twins"+ initial.equals(twin));
-        StdOut.println("itself" + initial.equals(initial));
+//        StdOut.println("itself" + initial.equals(initial));
         
         StdOut.println("Mantest");
         StdOut.println(initial.manhattan());
