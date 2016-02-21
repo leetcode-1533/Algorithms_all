@@ -1,12 +1,18 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
+import java.util.Iterator;
+import edu.princeton.cs.algs4.Stack;
+
 
 public class Board {
-    public final int[][] board;
+    public int[][] board;
     
     public Board(int[][] blocks) {
         // The constructor
+        //  clone is a shallow copy, kind of tricky :)
         board = blocks.clone();
+        for(int i = 0; i < blocks.length; i++) 
+            board[i] = blocks[i].clone();
     }
     
     public int dimension() {
@@ -56,7 +62,7 @@ public class Board {
         int temp = twincopy[0][loc[0]];
         twincopy[0][loc[0]] = twincopy[0][loc[1]];
         twincopy[0][loc[1]] = temp;
-        return new Board(twincopy);     
+        return new Board(twincopy);
     }
     
     public boolean equals(Object y) {
@@ -79,10 +85,62 @@ public class Board {
         }
         return true;     
     }
+  
+    public Iterable<Board> neighbors() {
+        // return iterator: all neighbors boards
+        Stack<Board> stboard = new Stack<Board>();
+        
+        // search for 0
+        int i = 0;
+        int j = 0;
+        outer:
+        for(i = 0; i < dimension(); i++) {
+            for(j = 0; j < dimension(); j++) {
+                if(board[i][j] == 0)
+                    break outer;
+            }
+        }
+        
+        int [][] tempboard;
+        if(i < (dimension() - 1)){
+            // have below
+            tempboard = exchelement(new int[]{i, j}, new int[]{i + 1, j}, board);
+            stboard.push(new Board(tempboard));
+        }
+        
+        if(i > 0){
+            // have above 
+            tempboard = exchelement(new int[]{i, j}, new int[]{i - 1, j}, board);
+            stboard.push(new Board(tempboard));
+        }
+        
+        if(j < (dimension() - 1)){
+            // have right
+            tempboard = exchelement(new int[]{i, j}, new int[]{i, j + 1}, board);
+            stboard.push(new Board(tempboard));
+        }
+        
+        if(j > 0){
+            // have left 
+            tempboard = exchelement(new int[]{i, j}, new int[]{i, j - 1}, board);
+            stboard.push(new Board(tempboard));
+        }        
+        
+        return stboard;
+    }
     
-//    public Iterable<Board> neighbors() {
-//        // return iterator: all neighbors boards
-//    }
+    private int[][] exchelement(int[] fir, int[] sec, int[][] copyboard) {
+        // exchange element i with j on board
+        // in place modification( object uses reference)
+        int[][] tempboard = copyboard.clone();
+        for(int i = 0; i < dimension(); i++) {
+            tempboard[i] = copyboard[i].clone();
+        }
+        int temp = tempboard[fir[0]][fir[1]];
+        tempboard[fir[0]][fir[1]] = tempboard[sec[0]][sec[1]];
+        tempboard[sec[0]][sec[1]] = temp;
+        return tempboard;
+    }
     
     public String toString() {
         // string representation
@@ -109,8 +167,15 @@ public class Board {
             for (int j = 0; j < N; j++)
                 blocks[i][j] = in.readInt(); 
         Board initial = new Board(blocks);
-        Board test = initial.twin();
-        StdOut.println(test);
+        
+        StdOut.println("Constructed Board:");
+        StdOut.println(initial);
+        
+        StdOut.println("Its neighbors");
+        Iterable<Board> test = initial.neighbors();
+        for(Board item : test) {
+            StdOut.println(item.toString());
+        }
 //        StdOut.println(initial.isGoal());
 //        StdOut.println(initial.equals(initial));
     }
