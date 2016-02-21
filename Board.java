@@ -84,22 +84,29 @@ public class Board {
     public Board twin() {
         // a board that is obtained by exchanging any pair of blocks
         
-        int i_loc = 0;
-        int[] loc = new int[2];
-        int[][] twincopy = new int[dimension()][dimension()];
+        int rec = 0;
+        int[][] locs = new int[2][2];
+        
+//        int[] loc = new int[2];
+//        int[][] twincopy = new int[dimension()][dimension()];
+        outer:
         for(int i = 0; i < dimension(); i++) {
             for(int j = 0; j < dimension(); j++) {
-                if(board[i][j] != 0 && i_loc < 2) {
-                    loc[i_loc] = j; // guaranteed in the first row
-                    i_loc++;
+                if(board[i][j] != 0 && rec < 2) {
+                    locs[rec][0] = i;
+                    locs[rec][1] = j;
+                    rec++;
                 }
-                twincopy[i][j] = board[i][j];
+                if(rec == 2) {
+                    break outer;
+                }
             }                          
         }
-        int temp = twincopy[0][loc[0]];
-        twincopy[0][loc[0]] = twincopy[0][loc[1]];
-        twincopy[0][loc[1]] = temp;
-        return new Board(twincopy);
+        return new Board(exchelement(locs[0], locs[1], board));
+//        int temp = twincopy[0][loc[0]];
+//        twincopy[0][loc[0]] = twincopy[0][loc[1]];
+//        twincopy[0][loc[1]] = temp;
+//        return new Board(twincopy);
     }
     
     public boolean equals(Object y) {
@@ -203,7 +210,7 @@ public class Board {
         Board twin = initial.twin();
         
         StdOut.println("Equals");
-        StdOut.println("To twins"+ initial.equals(twin));
+        StdOut.println("To twins: "+ initial.equals(twin));
 //        StdOut.println("itself" + initial.equals(initial));
         
         StdOut.println("Mantest");
@@ -211,7 +218,7 @@ public class Board {
         
         StdOut.printf("Hamming: %d\n", initial.hamming());
         
-        StdOut.println("Constructed Board");
+        StdOut.println("Constructed Board: ");
         StdOut.println(initial);
         
         StdOut.println("Is goal?");
