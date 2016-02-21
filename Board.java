@@ -19,10 +19,20 @@ public class Board {
         return board.length;
     }
     
-    public int hamming() {
-        // return the number of blocks out of position
-        return 0;
+    private int ij2index(int i, int j) {
+        return (i * dimension() + j + 1);
     }
+//    public int hamming() {
+//        // return the number of blocks out of position
+//        int miss = 0;
+//        for(int i = 0; i < dimension(); i++) {
+//            for(int j = 0; j < dimension(); j++) {
+//                if(board[i][j] != )
+//            }
+//        }
+//     
+//        return 0;
+//    }
     
     public int manhattan() {
         // the sum of the Manhattan distances between the blocks and their goal positions.
@@ -31,15 +41,18 @@ public class Board {
     
     public boolean isGoal() {
         // reached?
+        
+        // omit the last raw
         for(int i = 0; i < dimension() - 1; i++) {
-            for(int j = 0; j< dimension(); j++) {
-                if(board[i][j] != i * dimension() + j + 1)
+            for(int j = 0; j < dimension(); j++) {
+                if(board[i][j] != ij2index(i, j))
                     return false;
             }
         }
         
+        // omit the last element
         for(int j = 0; j < dimension() - 1; j++) {
-            if(board[dimension() - 1][j] != (dimension() - 1) * dimension() + j + 1)
+            if(board[dimension() - 1][j] != ij2index((dimension() - 1), j))
                 return false;
         }
         return true;
@@ -171,6 +184,9 @@ public class Board {
         
         StdOut.println("Constructed Board:");
         StdOut.println(initial);
+        
+        StdOut.println("Is goal?");
+        StdOut.println(initial.isGoal());
         
         StdOut.println("Its twins");
         StdOut.println(initial.twin());
