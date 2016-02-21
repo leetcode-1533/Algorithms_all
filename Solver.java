@@ -48,7 +48,7 @@ public class Solver {
         while((!deq.board.isGoal()) && (!deq_twin.board.isGoal())) {
             for(Board item : deq.board.neighbors()) {
                 if(deq.previous != null) {
-                    if(item != deq.previous.board) {
+                    if(!item.equals(deq.previous.board)) {
                         heap.insert(new SearchNode(deq.moves + 1, item, deq));
                     }
                 } else {
@@ -60,7 +60,7 @@ public class Solver {
             
             for(Board item_twin : deq_twin.board.neighbors()) {
                 if(deq_twin.previous != null) {
-                    if(item_twin != deq_twin.previous.board) {
+                    if(!item_twin.equals(deq_twin.previous.board)) {
                         heap_twin.insert(new SearchNode(deq_twin.moves + 1, item_twin, deq_twin));
                     }
                 } else {
