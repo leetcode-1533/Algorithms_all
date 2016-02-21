@@ -1,6 +1,5 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
-import java.util.Iterator;
 import edu.princeton.cs.algs4.Stack;
 
 
@@ -19,14 +18,16 @@ public class Board {
         // board Dimension N
         return board.length;
     }
-//    
-//    public int hamming() {
-//        // hamming distance
-//    }
-//    
-//    public int manhattan() {
-//        // manhanttan distance
-//    }
+    
+    public int hamming() {
+        // return the number of blocks out of position
+        return 0;
+    }
+    
+    public int manhattan() {
+        // the sum of the Manhattan distances between the blocks and their goal positions.
+        return 0;
+    }
     
     public boolean isGoal() {
         // reached?
@@ -130,8 +131,8 @@ public class Board {
     }
     
     private int[][] exchelement(int[] fir, int[] sec, int[][] copyboard) {
-        // exchange element i with j on board
-        // in place modification( object uses reference)
+        // exchange element i with j on board, and return a copy of which
+        
         int[][] tempboard = copyboard.clone();
         for(int i = 0; i < dimension(); i++) {
             tempboard[i] = copyboard[i].clone();
@@ -170,6 +171,9 @@ public class Board {
         
         StdOut.println("Constructed Board:");
         StdOut.println(initial);
+        
+        StdOut.println("Its twins");
+        StdOut.println(initial.twin());
         
         StdOut.println("Its neighbors");
         Iterable<Board> test = initial.neighbors();
