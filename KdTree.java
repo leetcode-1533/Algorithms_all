@@ -50,6 +50,8 @@ public class KdTree {
         if(rot == null) {   
             if(prev == null)
                 return new Node(p, new RectHV(0.0, 0.0, 1.0, 1.0));
+            if(prev.p.equals(p))
+                return null;
             
             if(!isVertical) { // is vertical for determining rect
                 if(p.x() < prev.p.x())
