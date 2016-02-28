@@ -20,6 +20,15 @@ public class KdTree {
         }
     }
     
+    private static class MaxNode {
+        private double max;
+        private Node Nod;
+        MaxNode(Node initn, double initmax) {
+            Nod = initn;
+            max = initmax;            
+        }      
+    }
+    
     public KdTree() {
         
     }
@@ -81,11 +90,15 @@ public class KdTree {
     }
     
     public void insert(Point2D p) {
+        if(p == null)
+            throw new NullPointerException();
         root = put(root, null, p, true);   
-        StdOut.println(p);
+//        StdOut.println(p);
     }
     
     public boolean contains(Point2D p) {
+        if(p == null)
+            throw new NullPointerException();
         return contains(root, p, true);       
     }
     
@@ -131,6 +144,60 @@ public class KdTree {
         draw(current.lb, !isVertical);
     }
     
+    public Point2D nearest(Point2D p) {
+        Node temp = nearest(root, null, p);
+        return temp.p;
+    }
+    
+    private Node nearest(Node current, Node pbest, Point2D p) {
+        if(current == null) {
+            return pbest;         
+        }
+//        StdDraw.clear();
+//        this.draw();
+//        StdDraw.setPenColor(StdDraw.GREEN);
+//        StdDraw.setPenRadius(.02);
+//        current.p.draw();
+//        StdDraw.setPenColor(StdDraw.BLUE);
+//        p.draw();
+
+
+        Node best;
+        double dist = current.p.distanceSquaredTo(p);
+        
+        if(pbest == null) {
+            best = nearest(current.lb, current, p);
+            if(current.rt == null)
+                return best;
+            else if(best.p.distanceSquaredTo(p) > current.rt.rect.distanceSquaredTo(p)) {
+                best = nearest(current.rt, best, p);
+                return best;
+            } else
+                return best;
+        } else {
+            if(dist < pbest.p.distanceSquaredTo(p)) {
+                best = nearest(current.lb, current, p);
+                if(current.rt == null)
+                    return current;
+                else if(best.p.distanceSquaredTo(p) > current.rt.rect.distanceSquaredTo(p)) {
+//                    StdOut.println("Rect" + current.rt.rect + "Points:" );
+                    best = nearest(current.rt, best, p);
+                    return best;
+                } else 
+                    return current;
+            } else {
+                best = nearest(current.lb, pbest, p);
+                if(current.rt == null)
+                    return best;
+                else if(best.p.distanceSquaredTo(p) > current.rt.rect.distanceSquaredTo(p)) {
+                    best = nearest(current.rt, best, p);
+                    return best;
+                } else 
+                    return best;
+            }
+        }
+    }
+    
     public static void main(String[] args) {      
         String filename = args[0];
         In in = new In(filename);
@@ -139,21 +206,24 @@ public class KdTree {
 
         // initialize the two data structures with point from standard input
         KdTree kdtree = new KdTree();
+//        StdOut.println(kdtree.size());
         while (!in.isEmpty()) {
             double x = in.readDouble();
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
         }        
-        in = new In(filename);
-        while (!in.isEmpty()) {
-            double x = in.readDouble();
-            double y = in.readDouble();
-            Point2D p = new Point2D(x, y);
-            StdOut.println(kdtree.contains(p));
-        } 
-        Point2D test = new Point2D(0.0, 0.6);
-        StdOut.println(kdtree.contains(test));
+        Point2D test = new Point2D(0.3, 0.3);
+        Point2D bt = kdtree.nearest(test);
         kdtree.draw();
+        
+
+        StdDraw.setPenColor(StdDraw.RED);
+        StdDraw.setPenRadius(.02);
+        bt.draw();
+
+        StdDraw.setPenColor(StdDraw.BLUE);
+        test.draw();
+
     }
 }
