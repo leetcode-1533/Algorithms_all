@@ -13,6 +13,11 @@ public class KdTree {
         private RectHV rect;
         private Node lb;
         private Node rt;
+        
+        private Node(Point2D inp, RectHV inrect) {
+            p = inp;
+            rect = inrect;
+        }
     }
     
     public KdTree() {
@@ -26,7 +31,7 @@ public class KdTree {
             return subSize(root);
     }
     
-    private int subSize(Node sroot) {
+    private static int subSize(Node sroot) {
         if(sroot.lb == null && sroot.rt == null)
             return 1;
         else if (sroot.lb != null && sroot.rt == null)
@@ -41,8 +46,26 @@ public class KdTree {
         return size() == 0;       
     }
     
-    public void insert(Point2D p) {
+    private Node put(Node rot, Point2D p, boolean isVertical) {
+        if(rot == null)
+            return new Node(p, null);
         
+        if(isVertical) { // compare by x
+            if(p.x() < rot.p.x()) // less and not the same to the left
+                rot.lb = put(rot.lb, p, !isVertical);
+            else 
+                rot.rt = put(rot.rt, p, !isVertical);
+        } else { // horizontal
+            if(p.y() < rot.p.y())
+                rot.lb = put(rot.lb, p, !isVertical);
+            else
+                rot.rt = put(rot.rt, p, !isVertical);   
+        }
+        return rot;
+    }
+    
+    public void insert(Point2D p) {
+        root = put(root, p, true);      
     }
     
     public void draw() {
@@ -53,7 +76,7 @@ public class KdTree {
         String filename = args[0];
         In in = new In(filename);
 
-        StdDraw.show(0);
+//        StdDraw.show(0);
 
         // initialize the two data structures with point from standard input
         KdTree kdtree = new KdTree();
@@ -62,8 +85,7 @@ public class KdTree {
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
-        }
-        
+        }     
+        StdOut.println("Hello Ass5");
     }
-
 }
