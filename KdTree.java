@@ -106,7 +106,26 @@ public class KdTree {
     }
    
     public void draw() {
-        
+        draw(root, true);       
+    }
+    
+    private void draw(Node current, boolean isVertical) {
+        if(current == null)
+            return;
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(.01);
+        current.p.draw();
+        if(isVertical) {
+            StdDraw.setPenColor(StdDraw.RED);
+            StdDraw.setPenRadius();
+            StdDraw.line(current.p.x(), current.rect.ymin(), current.p.x(), current.rect.ymax());
+        } else {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            StdDraw.setPenRadius();
+            StdDraw.line(current.rect.xmin(), current.p.y(), current.rect.xmax(), current.p.y());
+        }
+        draw(current.rt, !isVertical);             
+        draw(current.lb, !isVertical);
     }
     
     public static void main(String[] args) {      
@@ -132,5 +151,6 @@ public class KdTree {
         } 
         Point2D test = new Point2D(0.0, 0.6);
         StdOut.println(kdtree.contains(test));
+        kdtree.draw();
     }
 }
