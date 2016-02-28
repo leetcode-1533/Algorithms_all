@@ -68,6 +68,29 @@ public class KdTree {
         root = put(root, p, true);      
     }
     
+    public boolean contains(Point2D p) {
+        return contains(root, p, true);       
+    }
+    
+    private boolean contains(Node rot, Point2D p, boolean isVertical) {
+        if(rot == null) 
+            return false;
+        if(rot.p.equals(p))
+            return true;
+        
+        if(isVertical) {
+            if(p.x() < rot.p.x())
+                return contains(rot.lb, p, !isVertical);
+            else 
+                return contains(rot.rt, p, !isVertical);
+        } else {
+            if(p.y() < rot.p.y())
+                return contains(rot.lb, p, !isVertical);
+            else 
+                return contains(rot.rt, p, !isVertical);
+        }      
+    }
+   
     public void draw() {
         
     }
@@ -85,7 +108,15 @@ public class KdTree {
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
-        }     
-        StdOut.println("Hello Ass5");
+        }        
+        in = new In(filename);
+        while (!in.isEmpty()) {
+            double x = in.readDouble();
+            double y = in.readDouble();
+            Point2D p = new Point2D(x, y);
+            StdOut.println(kdtree.contains(p));
+        } 
+        Point2D test = new Point2D(0.0, 0.6);
+        StdOut.println(kdtree.contains(test));
     }
 }
