@@ -28,10 +28,11 @@ public class PointSET {
     }
     
     public void insert(Point2D p) {
-        container.add(p);
+        if(!container.contains(p))
+            container.add(p);
     }
     
-    public boolean containers(Point2D p) {
+    public boolean contains(Point2D p) {
         return container.contains(p);     
     }
     

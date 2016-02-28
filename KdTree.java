@@ -2,8 +2,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Bag;
-import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
@@ -197,7 +195,7 @@ public class KdTree {
         return container;
     }
     
-    public void range(Node rot, RectHV rect, Bag<Point2D> acc) {
+    private void range(Node rot, RectHV rect, Bag<Point2D> acc) {
         if(rot == null)
             return;
         
