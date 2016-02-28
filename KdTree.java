@@ -20,15 +20,6 @@ public class KdTree {
         }
     }
     
-    private static class MaxNode {
-        private double max;
-        private Node Nod;
-        MaxNode(Node initn, double initmax) {
-            Nod = initn;
-            max = initmax;            
-        }      
-    }
-    
     public KdTree() {
         
     }
@@ -178,13 +169,13 @@ public class KdTree {
             if(dist < pbest.p.distanceSquaredTo(p)) {
                 best = nearest(current.lb, current, p);
                 if(current.rt == null)
-                    return current;
+                    return best;
                 else if(best.p.distanceSquaredTo(p) > current.rt.rect.distanceSquaredTo(p)) {
 //                    StdOut.println("Rect" + current.rt.rect + "Points:" );
                     best = nearest(current.rt, best, p);
                     return best;
                 } else 
-                    return current;
+                    return best;
             } else {
                 best = nearest(current.lb, pbest, p);
                 if(current.rt == null)
@@ -213,7 +204,7 @@ public class KdTree {
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
         }        
-        Point2D test = new Point2D(0.3, 0.3);
+        Point2D test = new Point2D(0.9, 0.1);
         Point2D bt = kdtree.nearest(test);
         kdtree.draw();
         

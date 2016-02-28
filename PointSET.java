@@ -40,8 +40,10 @@ public class PointSET {
         double mindist = ans.distanceSquaredTo(p);
 
         for(Point2D item : container) {
-            if(item.distanceSquaredTo(p) < mindist)
-                ans = item;           
+            if(item.distanceSquaredTo(p) < mindist) {
+                ans = item;     
+                mindist = ans.distanceSquaredTo(p);
+            }
         }
         return ans;
         
