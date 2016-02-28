@@ -14,7 +14,7 @@ public class KdTree {
         private Node lb;
         private Node rt;
         
-        private Node(Point2D inp, RectHV inrect) {
+        public Node(Point2D inp, RectHV inrect) {
             p = inp;
             rect = inrect;
         }
@@ -46,26 +46,40 @@ public class KdTree {
         return size() == 0;       
     }
     
-    private Node put(Node rot, Point2D p, boolean isVertical) {
-        if(rot == null)
-            return new Node(p, null);
-        
+    private Node put(Node rot, Node prev, Point2D p, boolean isVertical) {
+        if(rot == null) {   
+            if(prev == null)
+                return new Node(p, new RectHV(0.0, 0.0, 1.0, 1.0));
+            
+            if(isVertical) {
+                if(p.x() < prev.p.x())
+                    return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.p.x(), prev.rect.ymax()));
+                else 
+                    return new Node(p, new RectHV(prev.p.x(), prev.rect.ymin(), prev.rect.xmax(), prev.rect.ymax())); 
+            } else {
+                if(p.y() < prev.p.y())
+                    return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.rect.xmax(), prev.p.y())); 
+                else 
+                    return new Node(p, new RectHV(prev.rect.xmin(), prev.p.y(), prev.rect.xmax(), prev.rect.ymax()));                   
+                }
+            }
+             
         if(isVertical) { // compare by x
             if(p.x() < rot.p.x()) // less and not the same to the left
-                rot.lb = put(rot.lb, p, !isVertical);
+                rot.lb = put(rot.lb, rot, p, !isVertical);
             else 
-                rot.rt = put(rot.rt, p, !isVertical);
+                rot.rt = put(rot.rt, rot, p, !isVertical);
         } else { // horizontal
             if(p.y() < rot.p.y())
-                rot.lb = put(rot.lb, p, !isVertical);
+                rot.lb = put(rot.lb, rot, p, !isVertical);
             else
-                rot.rt = put(rot.rt, p, !isVertical);   
+                rot.rt = put(rot.rt, rot, p, !isVertical);   
         }
         return rot;
     }
     
     public void insert(Point2D p) {
-        root = put(root, p, true);      
+        root = put(root, null, p, true);      
     }
     
     public boolean contains(Point2D p) {
