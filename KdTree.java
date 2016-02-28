@@ -1,7 +1,7 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.SET;
+import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
@@ -187,6 +187,33 @@ public class KdTree {
                     return best;
             }
         }
+    }
+    public Iterable<Point2D> range(RectHV rect) {
+        if(rect == null) {
+            throw new NullPointerException();
+        }
+        Bag<Point2D> container = new Bag<Point2D>();
+        range(root, rect, container);
+        return container;
+    }
+    
+    public void range(Node rot, RectHV rect, Bag<Point2D> acc) {
+        if(rot == null)
+            return;
+        
+        if(rot.p != null)
+            if(rect.contains(rot.p))
+                acc.add(rot.p);
+        
+        if(rot.lb != null) 
+            if(rot.lb.rect != null)
+                if(rect.intersects(rot.lb.rect))
+                    range(rot.lb, rect, acc);   
+        
+        if(rot.rt != null)
+            if(rot.rt.rect != null)
+                if(rect.intersects(rot.rt.rect))
+                    range(rot.rt, rect, acc);
     }
     
     public static void main(String[] args) {      
