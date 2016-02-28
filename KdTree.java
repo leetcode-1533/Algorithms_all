@@ -51,7 +51,7 @@ public class KdTree {
             if(prev == null)
                 return new Node(p, new RectHV(0.0, 0.0, 1.0, 1.0));
             
-            if(isVertical) {
+            if(!isVertical) { // is vertical for determining rect
                 if(p.x() < prev.p.x())
                     return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.p.x(), prev.rect.ymax()));
                 else 
@@ -79,7 +79,8 @@ public class KdTree {
     }
     
     public void insert(Point2D p) {
-        root = put(root, null, p, true);      
+        root = put(root, null, p, true);   
+        StdOut.println(p);
     }
     
     public boolean contains(Point2D p) {
