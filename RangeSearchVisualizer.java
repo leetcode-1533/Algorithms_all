@@ -16,6 +16,8 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
+
 
 public class RangeSearchVisualizer {
 
@@ -93,8 +95,13 @@ public class RangeSearchVisualizer {
             // draw the range search results for kd-tree in blue
             StdDraw.setPenRadius(.02);
             StdDraw.setPenColor(StdDraw.BLUE);
-            for (Point2D p : kdtree.range(rect))
+            int i = 0;
+            for (Point2D p : kdtree.range(rect)) {
                 p.draw();
+                i++;
+            }
+            StdOut.println("Range Size" + i);
+
 
             StdDraw.show(40);
         }

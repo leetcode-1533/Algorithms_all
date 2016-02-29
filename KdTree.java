@@ -51,20 +51,22 @@ public class KdTree {
                 return new Node(p, new RectHV(0.0, 0.0, 1.0, 1.0));
             }
             
-            if(prev.p.equals(p))
-                return null;
+            else {
+                if(prev.p.equals(p))
+                    return null;
             
-            size++;
-            if(!isVertical) { // is vertical for determining rect
-                if(p.x() < prev.p.x())
-                    return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.p.x(), prev.rect.ymax()));
-                else 
-                    return new Node(p, new RectHV(prev.p.x(), prev.rect.ymin(), prev.rect.xmax(), prev.rect.ymax())); 
-            } else {
-                if(p.y() < prev.p.y())
-                    return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.rect.xmax(), prev.p.y())); 
-                else 
-                    return new Node(p, new RectHV(prev.rect.xmin(), prev.p.y(), prev.rect.xmax(), prev.rect.ymax()));                   
+                size++;
+                if(!isVertical) { // is vertical for determining rect
+                    if(p.x() < prev.p.x())
+                        return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.p.x(), prev.rect.ymax()));
+                    else 
+                        return new Node(p, new RectHV(prev.p.x(), prev.rect.ymin(), prev.rect.xmax(), prev.rect.ymax())); 
+                } else {
+                    if(p.y() < prev.p.y())
+                        return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.rect.xmax(), prev.p.y())); 
+                    else 
+                        return new Node(p, new RectHV(prev.rect.xmin(), prev.p.y(), prev.rect.xmax(), prev.rect.ymax()));                   
+                    }
                 }
             }
              
@@ -139,7 +141,10 @@ public class KdTree {
     
     public Point2D nearest(Point2D p) {
         Node temp = nearest(root, root, p, true);
-        return temp.p;
+        if(temp != null)
+            return temp.p;
+        else 
+            return null;
     }
     
     private Node nearest(Node current, Node best, Point2D p, boolean isVertical) {
@@ -202,14 +207,12 @@ public class KdTree {
                 acc.add(rot.p);
         
         if(rot.lb != null) 
-            if(rot.lb.rect != null)
-                if(rect.intersects(rot.lb.rect))
-                    range(rot.lb, rect, acc);   
+            if(rect.intersects(rot.lb.rect))
+                range(rot.lb, rect, acc);   
         
         if(rot.rt != null)
-            if(rot.rt.rect != null)
-                if(rect.intersects(rot.rt.rect))
-                    range(rot.rt, rect, acc);
+            if(rect.intersects(rot.rt.rect))
+                range(rot.rt, rect, acc);
     }
     
     public static void main(String[] args) {      
@@ -226,19 +229,20 @@ public class KdTree {
             double y = in.readDouble();
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
+            StdOut.println("Current Size" + kdtree.size());
         }        
-        StdOut.println(kdtree.size());
-        Point2D test = new Point2D(0.9, 0.1);
-        Point2D bt = kdtree.nearest(test);
-        kdtree.draw();
+//        StdOut.println(kdtree.size());
+//        Point2D test = new Point2D(0.9, 0.1);
+//        Point2D bt = kdtree.nearest(test);
+//        kdtree.draw();
         
 
-        StdDraw.setPenColor(StdDraw.RED);
-        StdDraw.setPenRadius(.02);
-        bt.draw();
-
-        StdDraw.setPenColor(StdDraw.BLUE);
-        test.draw();
+//        StdDraw.setPenColor(StdDraw.RED);
+//        StdDraw.setPenRadius(.02);
+//        bt.draw();
+//
+//        StdDraw.setPenColor(StdDraw.BLUE);
+//        test.draw();
 
     }
 }

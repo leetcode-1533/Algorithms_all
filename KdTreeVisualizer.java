@@ -23,10 +23,11 @@ public class KdTreeVisualizer {
             if (StdDraw.mousePressed()) {
                 double x = StdDraw.mouseX();
                 double y = StdDraw.mouseY();
-                StdOut.printf("%8.6f %8.6f\n", x, y);
+//                StdOut.printf("%8.6f %8.6f\n", x, y);
                 Point2D p = new Point2D(x, y);
                 if (rect.contains(p)) {
-                    StdOut.printf("%8.6f %8.6f\n", x, y);
+//                    StdOut.printf("%8.6f %8.6f\n", x, y);
+                    StdOut.println("Before insertion: size:" + kdtree.size());
                     kdtree.insert(p);
                     StdOut.println("Size" + kdtree.size());
                     StdDraw.clear();
