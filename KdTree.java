@@ -46,11 +46,15 @@ public class KdTree {
     
     private Node put(Node rot, Node prev, Point2D p, boolean isVertical) {
         if(rot == null) {   
-            if(prev == null)
+            if(prev == null) {
+                size++;
                 return new Node(p, new RectHV(0.0, 0.0, 1.0, 1.0));
+            }
+            
             if(prev.p.equals(p))
                 return null;
             
+            size++;
             if(!isVertical) { // is vertical for determining rect
                 if(p.x() < prev.p.x())
                     return new Node(p, new RectHV(prev.rect.xmin(), prev.rect.ymin(), prev.p.x(), prev.rect.ymax()));
@@ -82,7 +86,6 @@ public class KdTree {
         if(p == null)
             throw new NullPointerException();
         root = put(root, null, p, true);   
-        size++;
 //        StdOut.println(p);
     }
     

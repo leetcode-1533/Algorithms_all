@@ -28,6 +28,7 @@ public class KdTreeVisualizer {
                 if (rect.contains(p)) {
                     StdOut.printf("%8.6f %8.6f\n", x, y);
                     kdtree.insert(p);
+                    StdOut.println("Size" + kdtree.size());
                     StdDraw.clear();
                     kdtree.draw();
                 }

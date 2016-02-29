@@ -37,15 +37,20 @@ public class PointSET {
     }
     
     public Point2D nearest(Point2D p) {
-        Point2D ans = container.min();
-        double mindist = ans.distanceSquaredTo(p);
-
-        for(Point2D item : container) {
-            if(item.distanceSquaredTo(p) < mindist) {
-                ans = item;     
-                mindist = ans.distanceSquaredTo(p);
+        Point2D ans = null;
+        
+        if(container.size() != 0) {
+            ans = container.min();
+            double mindist = ans.distanceSquaredTo(p);
+    
+            for(Point2D item : container) {
+                if(item.distanceSquaredTo(p) < mindist) {
+                    ans = item;     
+                    mindist = ans.distanceSquaredTo(p);
+                }
             }
-        }
+        } 
+        
         return ans;
         
     }
