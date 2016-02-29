@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class KdTree {
     private Node root;
@@ -18,27 +19,26 @@ public class KdTree {
         }
     }
     
-    public KdTree() {
-        
+    private int size;
+    
+    public KdTree() {       
+        size = 0;
     }
     
     public int size() {
-        if(root == null)
-            return 0;
-        else 
-            return subSize(root);
+        return size;
     }
     
-    private static int subSize(Node sroot) {
-        if(sroot.lb == null && sroot.rt == null)
-            return 1;
-        else if (sroot.lb != null && sroot.rt == null)
-            return 1 + subSize(sroot.lb);
-        else if (sroot.lb == null && sroot.rt != null)
-            return 1 + subSize(sroot.rt);
-        else 
-            return 1 + subSize(sroot.lb) + subSize(sroot.rt);
-    }
+//    private static int subSize(Node sroot) {
+//        if(sroot.lb == null && sroot.rt == null)
+//            return 1;
+//        else if (sroot.lb != null && sroot.rt == null)
+//            return 1 + subSize(sroot.lb);
+//        else if (sroot.lb == null && sroot.rt != null)
+//            return 1 + subSize(sroot.rt);
+//        else 
+//            return 1 + subSize(sroot.lb) + subSize(sroot.rt);
+//    }
     
     public boolean isEmpty() {
         return size() == 0;       
@@ -82,6 +82,7 @@ public class KdTree {
         if(p == null)
             throw new NullPointerException();
         root = put(root, null, p, true);   
+        size++;
 //        StdOut.println(p);
     }
     
@@ -134,13 +135,13 @@ public class KdTree {
     }
     
     public Point2D nearest(Point2D p) {
-        Node temp = nearest(root, null, p);
+        Node temp = nearest(root, root, p, true);
         return temp.p;
     }
     
-    private Node nearest(Node current, Node pbest, Point2D p) {
+    private Node nearest(Node current, Node best, Point2D p, boolean isVertical) {
         if(current == null) {
-            return pbest;         
+            return best;         
         }
 //        StdDraw.clear();
 //        this.draw();
@@ -149,42 +150,36 @@ public class KdTree {
 //        current.p.draw();
 //        StdDraw.setPenColor(StdDraw.BLUE);
 //        p.draw();
-
-
-        Node best;
-        double dist = current.p.distanceSquaredTo(p);
         
-        if(pbest == null) {
-            best = nearest(current.lb, current, p);
-            if(current.rt == null)
-                return best;
-            else if(best.p.distanceSquaredTo(p) > current.rt.rect.distanceSquaredTo(p)) {
-                best = nearest(current.rt, best, p);
-                return best;
-            } else
-                return best;
+        if(current.p.distanceSquaredTo(p) < best.p.distanceSquaredTo(p))
+            best = current;
+        
+        if(isVertical) {
+            if(current.p.x() < p.x()) { // target at the right
+                best = nearest(current.rt, best, p, !isVertical);
+            if(current.lb != null
+                    && current.lb.rect.distanceSquaredTo(p) < best.p.distanceSquaredTo(p))
+                best = nearest(current.lb, best, p, !isVertical);    
+            } else { // target at the left
+                best = nearest(current.lb, best, p, !isVertical);
+                if(current.rt != null
+                        && current.rt.rect.distanceSquaredTo(p) < best.p.distanceSquaredTo(p))
+                    best = nearest(current.rt, best, p, !isVertical);               
+            }                      
         } else {
-            if(dist < pbest.p.distanceSquaredTo(p)) {
-                best = nearest(current.lb, current, p);
-                if(current.rt == null)
-                    return best;
-                else if(best.p.distanceSquaredTo(p) > current.rt.rect.distanceSquaredTo(p)) {
-//                    StdOut.println("Rect" + current.rt.rect + "Points:" );
-                    best = nearest(current.rt, best, p);
-                    return best;
-                } else 
-                    return best;
-            } else {
-                best = nearest(current.lb, pbest, p);
-                if(current.rt == null)
-                    return best;
-                else if(best.p.distanceSquaredTo(p) > current.rt.rect.distanceSquaredTo(p)) {
-                    best = nearest(current.rt, best, p);
-                    return best;
-                } else 
-                    return best;
-            }
+            if(current.p.y() < p.y()) { // target at the right
+                best = nearest(current.rt, best, p, !isVertical);
+            if(current.lb != null
+                    && current.lb.rect.distanceSquaredTo(p) < best.p.distanceSquaredTo(p))
+                best = nearest(current.lb, best, p, !isVertical);    
+            } else { // target at the left
+                best = nearest(current.lb, best, p, !isVertical);
+                if(current.rt != null
+                        && current.rt.rect.distanceSquaredTo(p) < best.p.distanceSquaredTo(p))
+                    best = nearest(current.rt, best, p, !isVertical);               
+            }         
         }
+        return best;
     }
     public Iterable<Point2D> range(RectHV rect) {
         if(rect == null) {
@@ -229,6 +224,7 @@ public class KdTree {
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
         }        
+        StdOut.println(kdtree.size());
         Point2D test = new Point2D(0.9, 0.1);
         Point2D bt = kdtree.nearest(test);
         kdtree.draw();
