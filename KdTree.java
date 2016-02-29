@@ -69,6 +69,8 @@ public class KdTree {
                     }
                 }
             }
+        if(rot.p.equals(p))
+            return rot;
              
         if(isVertical) { // compare by x
             if(p.x() < rot.p.x()) // less and not the same to the left
@@ -230,7 +232,17 @@ public class KdTree {
             kdtree.insert(p);
             StdOut.println("Current Size" + kdtree.size());
         }        
-//        StdOut.println(kdtree.size());
+        
+        in = new In(filename);
+        while (!in.isEmpty()) {
+            double x = in.readDouble();
+            double y = in.readDouble();
+            Point2D p = new Point2D(x, y);
+            kdtree.insert(p);
+            StdOut.println("Second Current Size" + kdtree.size());
+        }       
+
+        StdOut.println(kdtree.size());
 //        Point2D test = new Point2D(0.9, 0.1);
 //        Point2D bt = kdtree.nearest(test);
 //        kdtree.draw();
