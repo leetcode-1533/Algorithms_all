@@ -14,26 +14,80 @@ public class SAP {
     public int length(int v, int w) {
         BreadthFirstDirectedPaths BFsearch_v = new BreadthFirstDirectedPaths(graph, v);
         BreadthFirstDirectedPaths BFsearch_w = new BreadthFirstDirectedPaths(graph, w);
-        
-        
-        return 0;  
+        int min = -1;
+        for(int i = 0; i < graph.V(); i++) {
+            if(BFsearch_v.hasPathTo(i) && BFsearch_w.hasPathTo(i)) {
+                int temp = BFsearch_v.distTo(i) + BFsearch_w.distTo(i);
+                if(temp < min || min < 0) {
+                    min = temp;
+                }
+            }
+        }
+        return min;
     }
     
-//    public int ancestor(int v, int w) {
-//        
-//    }
+    public int ancestor(int v, int w) {
+        BreadthFirstDirectedPaths BFsearch_v = new BreadthFirstDirectedPaths(graph, v);
+        BreadthFirstDirectedPaths BFsearch_w = new BreadthFirstDirectedPaths(graph, w);
+        int min = -1;
+        int anc = -1;
+        for(int i = 0; i < graph.V(); i++) {
+            if(BFsearch_v.hasPathTo(i) && BFsearch_w.hasPathTo(i)) {
+                int temp = BFsearch_v.distTo(i) + BFsearch_w.distTo(i);
+                if(temp < min || min < 0) {
+                    min = temp;
+                    anc = i;
+                }
+            }
+        }
+        return anc;      
+    }
     
+    public int length(Iterable<Integer> v, Iterable<Integer> w) {   
+        BreadthFirstDirectedPaths BFsearch_v = new BreadthFirstDirectedPaths(graph, v);
+        BreadthFirstDirectedPaths BFsearch_w = new BreadthFirstDirectedPaths(graph, w);
+        int min = -1;
+        for(int i = 0; i < graph.V(); i++) {
+            if(BFsearch_v.hasPathTo(i) && BFsearch_w.hasPathTo(i)) {
+                int temp = BFsearch_v.distTo(i) + BFsearch_w.distTo(i);
+                if(temp < min || min < 0) {
+                    min = temp;
+                }
+            }
+        }
+        return min;
+        
+    }
+    
+    public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
+        BreadthFirstDirectedPaths BFsearch_v = new BreadthFirstDirectedPaths(graph, v);
+        BreadthFirstDirectedPaths BFsearch_w = new BreadthFirstDirectedPaths(graph, w);
+        int min = -1;
+        int anc = -1;
+        for(int i = 0; i < graph.V(); i++) {
+            if(BFsearch_v.hasPathTo(i) && BFsearch_w.hasPathTo(i)) {
+                int temp = BFsearch_v.distTo(i) + BFsearch_w.distTo(i);
+                if(temp < min || min < 0) {
+                    min = temp;
+                    anc = i;
+                }
+            }
+        }
+        return anc;     
+        
+    }
+     
     public static void main(String[] args) {
         In in = new In(args[0]);
         Digraph G = new Digraph(in);
         SAP sap = new SAP(G);
         
         {
-            int v = 3;
-            int w = 11;
+            int v = 1;
+            int w = 6;
             int length = sap.length(v, w);
-//            int ancestor = sap.ancestor(v, w);
-            StdOut.printf("length = %d", length);
+            int ancestor = sap.ancestor(v, w);
+            StdOut.printf("length = %d, ancestor = %d", length, ancestor);
         }
     }
 }
