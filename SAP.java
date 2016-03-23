@@ -14,9 +14,9 @@ public class SAP {
     public int length(int v, int w) {
         BreadthFirstDirectedPaths BFsearch_v = new BreadthFirstDirectedPaths(graph, v);
         BreadthFirstDirectedPaths BFsearch_w = new BreadthFirstDirectedPaths(graph, w);
-
         
         
+        return 0;  
     }
     
 //    public int ancestor(int v, int w) {
@@ -28,14 +28,12 @@ public class SAP {
         Digraph G = new Digraph(in);
         SAP sap = new SAP(G);
         
-        StdOut.println(G);
-
-        while (!StdIn.isEmpty()) {
-            int v = StdIn.readInt();
-            int w = StdIn.readInt();
-            int length   = sap.length(v, w);
+        {
+            int v = 3;
+            int w = 11;
+            int length = sap.length(v, w);
 //            int ancestor = sap.ancestor(v, w);
-            StdOut.printf("length = %d, ancestor = %d\n", length);
+            StdOut.printf("length = %d", length);
         }
     }
 }
