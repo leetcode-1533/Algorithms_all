@@ -2,6 +2,7 @@ import edu.princeton.cs.algs4.SeparateChainingHashST;
 import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.DirectedCycle;
 import edu.princeton.cs.algs4.StdOut;
 
 public class WordNet {
@@ -16,7 +17,6 @@ public class WordNet {
         
         sap = new SAP(graph);
         
-//        StdOut.println(graph);     
     }
     
     private void con_hypernyms(int num_vertices, String hypernyms) {
@@ -26,13 +26,17 @@ public class WordNet {
         while(in.hasNextLine()) {
             String line = in.readLine();
             String[] fields = line.split(",");
-            int hyper = Integer.parseInt(fields[0]);
-            for(String specified : fields) {
-                if(specified == fields[0]) continue;               
-                int int_specified = Integer.parseInt(specified);
-                graph.addEdge(int_specified, hyper);             
+            int specified = Integer.parseInt(fields[0]);
+            for(String hyper : fields) {
+                if(hyper == fields[0]) continue;        
+                
+                int int_hyper = Integer.parseInt(hyper);
+                graph.addEdge(specified, int_hyper);             
             }         
-        }        
+        }
+        DirectedCycle det_cycle = new DirectedCycle(graph);
+        if(det_cycle.hasCycle())
+            throw new java.lang.IllegalArgumentException();
     }
     
     private int con_synsets(String synsets) {
@@ -71,11 +75,13 @@ public class WordNet {
     }
     
     public boolean isNoun(String word) {
-        return st.contains(word);
-        
+        return st.contains(word);       
     }
     
     public int distance(String nounA, String nounB) {
+        check(nounA);
+        check(nounB);
+        
         Iterable<Integer> subA = st.get(nounA);
         Iterable<Integer> subB = st.get(nounB);
         
@@ -83,14 +89,25 @@ public class WordNet {
     }
     
     public String sap(String nounA, String nounB) {
+        check(nounA);
+        check(nounB);
+        
         Iterable<Integer> subA = st.get(nounA);
         Iterable<Integer> subB = st.get(nounB);
         
-        int anc = sap.ancestor(subA, subB);     
+        int anc = sap.ancestor(subA, subB);   
         return check_anc.get(anc);
+    }
+    
+    private void check(String noun) {
+        if(noun == null)
+            throw new java.lang.NullPointerException();
+        if(!isNoun(noun))
+            throw new java.lang.IllegalArgumentException();
     }
     
     public static void main(String[] args) {
         WordNet net = new WordNet(args[0], args[1]);     
+        StdOut.println(net.sap("worm", "bird"));
     }
 }
