@@ -108,6 +108,6 @@ public class WordNet {
     
     public static void main(String[] args) {
         WordNet net = new WordNet(args[0], args[1]);     
-        StdOut.println(net.sap("worm", "bird"));
+        StdOut.println(net.sap("individual", "edible_fruit"));
     }
 }
