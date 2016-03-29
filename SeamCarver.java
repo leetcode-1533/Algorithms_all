@@ -2,6 +2,7 @@ import java.awt.Color;
 import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.Stopwatch;
+import edu.princeton.cs.algs4.ResizingArrayStack;
 
 public class SeamCarver {
     private Picture pic;
@@ -26,8 +27,39 @@ public class SeamCarver {
         
         for(int j = 0; j < pic.width(); j++) {
             verticTo[0][j] = 0;
+        }     
+    }
+    
+    public int[] findVerticalSeam() {
+        ResizingArrayStack<Integer> rev_route = new ResizingArrayStack<Integer>();
+        int endPoint = minIndex(dist[pic.height() - 1]);
+        rev_route.push(endPoint);
+
+        int next = verticTo[pic.height() - 1][endPoint];
+
+        for(int i = pic.height() - 2; i >= 0; i--) {
+            rev_route.push(next);
+            next = verticTo[i][next];
         }
-             
+        
+        int[] route = new int[pic.height()];
+        for(int i = 0; i < pic.height(); i++) 
+            route[i] = rev_route.pop();
+         
+        return route;         
+    }
+    
+    private int minIndex(double[] array) {
+        double min = array[0];
+        int loc = 0;
+        
+        for(int i = 1; i < array.length; i++) {
+            if(array[i] < min) {
+                loc = i;
+                min = array[i];            
+            }        
+        }
+        return loc;
     }
     
     private void vertSP() {
@@ -144,8 +176,9 @@ public class SeamCarver {
         }
         
         
-        StdOut.printf("Printing energy calculated for each pixel.\n");  
-
-
+        StdOut.printf("Vroute \n");  
+        int[] vroute = sc.findVerticalSeam();
+        for(int item : vroute)
+            StdOut.printf("%3d ", item);
     }
 }
