@@ -5,13 +5,53 @@ import edu.princeton.cs.algs4.Stopwatch;
 import edu.princeton.cs.algs4.ResizingArrayStack;
 
 public class SeamCarver {
-    private Picture pic;
+    private Color[][] pic;
+    private int height;
+    private int width;
     private double[][] P_energy, Inv_energy;
     
+    private void initEnergy() {
+        for(int i = 0; i < height; i++) { // Iterator for rows
+            for(int j = 0; j < width; j++) { // Iterator for Columns
+                if(j == 0 || j == width - 1  || i == 0 || i == height - 1)
+                    P_energy[i][j] = 1000;
+                else
+                    P_energy[i][j] = Math.sqrt(centerDiff(j, i));
+            }
+        }
+    }
+        
+    private int centerDiff(int col, int row) {
+        Color above = pic[row - 1][col];
+        Color below = pic[row + 1][col];      
+        int bdiff = above.getBlue() - below.getBlue();
+        int rdiff = above.getRed() - below.getRed();
+        int gdiff = above.getGreen() - below.getGreen();
+        int vertDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
+
+        above = pic[row][col - 1];
+        below = pic[row][col + 1];    
+        bdiff = above.getBlue() - below.getBlue();
+        rdiff = above.getRed() - below.getRed();
+        gdiff = above.getGreen() - below.getGreen();
+        int horiDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
+        
+        return vertDiff + horiDiff;        
+    }
+    
     public SeamCarver(Picture picture) {
-        pic = new Picture(picture);
-        P_energy = new double[pic.height()][pic.width()];
-        Inv_energy = new double[pic.width()][pic.height()];
+        height = picture.height();
+        width = picture.width();
+        pic = new Color[height][width];
+        
+        for(int col = 0; col < picture.width(); col++) {
+            for(int row = 0; row < picture.height(); row++) {
+                pic[row][col] = picture.get(col, row);
+            }
+        }
+        
+        P_energy = new double[height][width];
+        Inv_energy = new double[width][height];
 
         initEnergy();
         for(int i = 0; i < P_energy.length; i++) {
@@ -122,46 +162,19 @@ public class SeamCarver {
         return P_energy[y][x]; // energy per row is picture per row
     }
     
-    private void initEnergy() {
-        for(int i = 0; i < pic.height(); i++) { // Iterator for rows
-            for(int j = 0; j < pic.width(); j++) { // Iterator for Columns
-                if(j == 0 || j == pic.width() - 1  || i == 0 || i == pic.height() - 1)
-                    P_energy[i][j] = 1000;
-                else
-                    P_energy[i][j] = Math.sqrt(centerDiff(j, i));
-            }
-        }
-    }
-        
-    private int centerDiff(int col, int row) {
-        Color above = pic.get(col, row - 1);
-        Color below = pic.get(col, row + 1);      
-        int bdiff = above.getBlue() - below.getBlue();
-        int rdiff = above.getRed() - below.getRed();
-        int gdiff = above.getGreen() - below.getGreen();
-        int vertDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
 
-        above = pic.get(col - 1, row);
-        below = pic.get(col + 1, row);    
-        bdiff = above.getBlue() - below.getBlue();
-        rdiff = above.getRed() - below.getRed();
-        gdiff = above.getGreen() - below.getGreen();
-        int horiDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
-        
-        return vertDiff + horiDiff;        
-    }
     
     public int width() {
-        return pic.width();
+        return width;
     }
     
     public int height() {
-        return pic.height();
+        return height;
     }
     
-    public Picture picture() {
-        return pic;
-    }
+//    public Picture picture() {
+//        return pic;
+//    }
     
     public static void main(String[] args) {
         Picture picture = new Picture(args[0]);
