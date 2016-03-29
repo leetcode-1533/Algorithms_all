@@ -134,7 +134,7 @@ public class SeamCarver {
         return findVerticalSeam(Inv_energy);
     }
     
-    public int[] findVerticalSeam(double[][] energy) {  
+    private int[] findVerticalSeam(double[][] energy) {  
         int height = energy.length;
         int width = energy[0].length;
         
@@ -221,7 +221,7 @@ public class SeamCarver {
         }
     }
     
-    public void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
+    private void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
         int oldseam = seam[0];
         int afterwidth = energy[0].length - 1;
 //        StdOut.println(afterwidth);
