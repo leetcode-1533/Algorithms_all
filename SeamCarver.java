@@ -5,21 +5,47 @@ import edu.princeton.cs.algs4.Stopwatch;
 
 public class SeamCarver {
     private Picture pic;
-    private int[][] energy, verticTo, dist;
+    private int[][] verticTo;
+    private double[][] energy, dist;
     
     public SeamCarver(Picture picture) {
         pic = new Picture(picture);
-        energy = new int[pic.height()][pic.width()];
+        energy = new double[pic.height()][pic.width()];
+        dist = new double[pic.height()][pic.width()];
         verticTo = new int[pic.height()][pic.width()];
-        dist = new int[pic.height()][pic.width()];
+
+        initEnergy();
+        for(int i = 1; i < pic.height(); i++ ) {
+            for(int j = 0; j < pic.width(); j++) {
+                dist[i][j] = -1;
+            }
+        }
+        for(int j = 0; j < pic.width(); j++) {
+            dist[0][j] = energy[0][j];
+        }
         
-        calEnergy();
+        for(int j = 0; j < pic.width(); j++) {
+            verticTo[0][j] = 0;
+        }
              
+    }
+    
+    private void vertSP() {
+        for(int i = 0; i < pic.height() - 1; i++) { // for next row
+            for(int j = 0; j < pic.width(); j++) {
+                int[] curPoint = new int[] {i, j};
+                int[] nextPs = adj(j);
+                for(int nP : nextPs) {
+                    refresh(curPoint, new int[] {i + 1, nP});
+                }
+            }
+        }
+        
     }
     
     private int[] adj(int x) {
         // for point at column x, give it adjacency neighbors at next row
-        // Constrained by width
+        // Constrained by width columns<-> width, 
         if(x == 0) {
             return new int[] {0, 1};
         } else if(x == pic.width() - 1) {
@@ -31,7 +57,7 @@ public class SeamCarver {
     
     private void refresh(int[] vFrom, int[] vTo) {
         // vFrom[0] for row, vFrom[1] for column
-        if(dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]] < dist[vTo[0]][vTo[1]]) {
+        if(dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]] < dist[vTo[0]][vTo[1]] || dist[vTo[0]][vTo[1]] < 0) {
             verticTo[vTo[0]][vTo[1]] = vFrom[1];  // record the above row column
             dist[vTo[0]][vTo[1]] = dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]];
         }
@@ -39,15 +65,16 @@ public class SeamCarver {
     
     public double energy(int x, int y) {
         // at column x, row y
-        if(x == 0 || x == pic.width() - 1  || y == 0 || y == pic.height() - 1)
-            return 1000;
-        return Math.sqrt(energy[y][x]); // energy per row is picture per row
+        return energy[y][x]; // energy per row is picture per row
     }
     
-    private void calEnergy() {
-        for(int i = 1; i < pic.height() - 1; i++) { // Iterator for rows
-            for(int j = 1; j < pic.width() - 1; j++) { // Iterator for Columns
-                energy[i][j] = centerDiff(j, i);
+    private void initEnergy() {
+        for(int i = 0; i < pic.height(); i++) { // Iterator for rows
+            for(int j = 0; j < pic.width(); j++) { // Iterator for Columns
+                if(j == 0 || j == pic.width() - 1  || i == 0 || i == pic.height() - 1)
+                    energy[i][j] = 1000;
+                else
+                    energy[i][j] = Math.sqrt(centerDiff(j, i));
             }
         }
     }
@@ -77,5 +104,48 @@ public class SeamCarver {
     public int height() {
         return pic.height();
     }
- 
+    
+    public Picture picture() {
+        return pic;
+    }
+    
+    public static void main(String[] args) {
+        Picture picture = new Picture(args[0]);
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", picture.width(), picture.height());
+        
+        SeamCarver sc = new SeamCarver(picture);
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++)
+                StdOut.printf("%9.0f ", sc.energy[j][i]);
+            StdOut.println();
+        }
+        
+        StdOut.println("Original distance");
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++)
+                StdOut.printf("%9.0f ", sc.dist[j][i]);
+            StdOut.println();
+        }
+        
+        sc.vertSP();
+        
+        StdOut.println("Find Vert");
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++)
+                StdOut.printf("%9.2f  ", sc.dist[j][i]);
+            StdOut.println();
+        }
+        
+        StdOut.println();
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++)
+                StdOut.printf("%9d ", sc.verticTo[j][i]);
+            StdOut.println();
+        }
+        
+        
+        StdOut.printf("Printing energy calculated for each pixel.\n");  
+
+
+    }
 }
