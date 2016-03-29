@@ -77,7 +77,7 @@ public class SCUtility {
                 picture.set(i, j, new Color(normalizedGrayValue, normalizedGrayValue, normalizedGrayValue));
             }
 
-        return p;
+        return picture;
     }
 
 
