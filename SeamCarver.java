@@ -17,6 +17,26 @@ public class SeamCarver {
              
     }
     
+    private int[] adj(int x) {
+        // for point at column x, give it adjacency neighbors at next row
+        // Constrained by width
+        if(x == 0) {
+            return new int[] {0, 1};
+        } else if(x == pic.width() - 1) {
+            return new int[] {pic.width() - 2, pic.width() - 1};
+        } else {
+            return new int[] { x - 1, x, x + 1};
+        }      
+    }
+    
+    private void refresh(int[] vFrom, int[] vTo) {
+        // vFrom[0] for row, vFrom[1] for column
+        if(dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]] < dist[vTo[0]][vTo[1]]) {
+            verticTo[vTo[0]][vTo[1]] = vFrom[1];  // record the above row column
+            dist[vTo[0]][vTo[1]] = dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]];
+        }
+    }
+    
     public double energy(int x, int y) {
         // at column x, row y
         if(x == 0 || x == pic.width() - 1  || y == 0 || y == pic.height() - 1)
