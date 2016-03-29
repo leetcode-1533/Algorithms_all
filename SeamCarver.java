@@ -83,7 +83,7 @@ public class SeamCarver {
         int height = P_energy.length;
         int width = P_energy[0].length;
         
-        if(P_energy.length != Inv_energy[0].length) {
+        if(P_energy[0].length != Inv_energy.length) {
             Inv_energy = new double[width][height];
             Inv_pic = new Color[width][height];
 
@@ -224,6 +224,7 @@ public class SeamCarver {
     public void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
         int oldseam = seam[0];
         int afterwidth = energy[0].length - 1;
+//        StdOut.println(afterwidth);
         
         for(int i = 0; i < pict.length; i++) {
             if(seam[i] < 0 || seam[i] >= afterwidth + 1)
