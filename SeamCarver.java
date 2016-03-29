@@ -6,31 +6,37 @@ import edu.princeton.cs.algs4.ResizingArrayStack;
 
 public class SeamCarver {
     private Picture pic;
-    private int[][] verticTo;
-    private double[][] energy, dist;
+    private double[][] P_energy, Inv_energy;
     
     public SeamCarver(Picture picture) {
         pic = new Picture(picture);
-        energy = new double[pic.height()][pic.width()];
-        dist = new double[pic.height()][pic.width()];
-        verticTo = new int[pic.height()][pic.width()];
+        P_energy = new double[pic.height()][pic.width()];
+        Inv_energy = new double[pic.width()][pic.height()];
 
         initEnergy();
+     
+    }
+    
+    public int[] findVerticalSeam() {
+        double[][] dist = new double[pic.height()][pic.width()];
+        int[][] verticTo = new int[pic.height()][pic.width()];
+        
         for(int i = 1; i < pic.height(); i++ ) {
             for(int j = 0; j < pic.width(); j++) {
                 dist[i][j] = -1;
             }
         }
+        
         for(int j = 0; j < pic.width(); j++) {
-            dist[0][j] = energy[0][j];
+            dist[0][j] = P_energy[0][j];
         }
         
         for(int j = 0; j < pic.width(); j++) {
             verticTo[0][j] = 0;
-        }     
-    }
-    
-    public int[] findVerticalSeam() {
+        }
+        
+        vertSP(P_energy, dist, verticTo);
+        
         ResizingArrayStack<Integer> rev_route = new ResizingArrayStack<Integer>();
         int endPoint = minIndex(dist[pic.height() - 1]);
         rev_route.push(endPoint);
@@ -62,32 +68,32 @@ public class SeamCarver {
         return loc;
     }
     
-    private void vertSP() {
-        for(int i = 0; i < pic.height() - 1; i++) { // for next row
-            for(int j = 0; j < pic.width(); j++) {
+    private void vertSP(double[][] energy, double[][] dist, int[][] verticTo) {
+        for(int i = 0; i < energy.length - 1; i++) { // for next row
+            for(int j = 0; j < energy[0].length; j++) {
                 int[] curPoint = new int[] {i, j};
-                int[] nextPs = adj(j);
+                int[] nextPs = adj(j, energy);
                 for(int nP : nextPs) {
-                    refresh(curPoint, new int[] {i + 1, nP});
+                    refresh(curPoint, new int[] {i + 1, nP}, energy, dist, verticTo);
                 }
             }
         }
         
     }
     
-    private int[] adj(int x) {
+    private int[] adj(int x, double[][] energy) {
         // for point at column x, give it adjacency neighbors at next row
         // Constrained by width columns<-> width, 
         if(x == 0) {
             return new int[] {0, 1};
-        } else if(x == pic.width() - 1) {
-            return new int[] {pic.width() - 2, pic.width() - 1};
+        } else if(x == energy[0].length - 1) {
+            return new int[] {energy[0].length - 2, energy[0].length - 1};
         } else {
             return new int[] { x - 1, x, x + 1};
         }      
     }
     
-    private void refresh(int[] vFrom, int[] vTo) {
+    private void refresh(int[] vFrom, int[] vTo, double[][] energy, double[][] dist, int[][] verticTo) {
         // vFrom[0] for row, vFrom[1] for column
         if(dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]] < dist[vTo[0]][vTo[1]] || dist[vTo[0]][vTo[1]] < 0) {
             verticTo[vTo[0]][vTo[1]] = vFrom[1];  // record the above row column
@@ -97,16 +103,16 @@ public class SeamCarver {
     
     public double energy(int x, int y) {
         // at column x, row y
-        return energy[y][x]; // energy per row is picture per row
+        return P_energy[y][x]; // energy per row is picture per row
     }
     
     private void initEnergy() {
         for(int i = 0; i < pic.height(); i++) { // Iterator for rows
             for(int j = 0; j < pic.width(); j++) { // Iterator for Columns
                 if(j == 0 || j == pic.width() - 1  || i == 0 || i == pic.height() - 1)
-                    energy[i][j] = 1000;
+                    P_energy[i][j] = 1000;
                 else
-                    energy[i][j] = Math.sqrt(centerDiff(j, i));
+                    P_energy[i][j] = Math.sqrt(centerDiff(j, i));
             }
         }
     }
@@ -146,35 +152,6 @@ public class SeamCarver {
         StdOut.printf("image is %d pixels wide by %d pixels high.\n", picture.width(), picture.height());
         
         SeamCarver sc = new SeamCarver(picture);
-        for (int j = 0; j < sc.height(); j++) {
-            for (int i = 0; i < sc.width(); i++)
-                StdOut.printf("%9.0f ", sc.energy[j][i]);
-            StdOut.println();
-        }
-        
-        StdOut.println("Original distance");
-        for (int j = 0; j < sc.height(); j++) {
-            for (int i = 0; i < sc.width(); i++)
-                StdOut.printf("%9.0f ", sc.dist[j][i]);
-            StdOut.println();
-        }
-        
-        sc.vertSP();
-        
-        StdOut.println("Find Vert");
-        for (int j = 0; j < sc.height(); j++) {
-            for (int i = 0; i < sc.width(); i++)
-                StdOut.printf("%9.2f  ", sc.dist[j][i]);
-            StdOut.println();
-        }
-        
-        StdOut.println();
-        for (int j = 0; j < sc.height(); j++) {
-            for (int i = 0; i < sc.width(); i++)
-                StdOut.printf("%9d ", sc.verticTo[j][i]);
-            StdOut.println();
-        }
-        
         
         StdOut.printf("Vroute \n");  
         int[] vroute = sc.findVerticalSeam();
