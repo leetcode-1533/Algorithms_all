@@ -22,8 +22,8 @@ public class SeamCarver {
     }
         
     private int centerDiff(int col, int row, Color[][] Pic) {
-        width = Pic[0].length;
-        height = Pic.length;
+        int width = Pic[0].length;
+        int height = Pic.length;
                 
         if(col == 0 || col == width - 1  || row == 0 || row == height - 1)
             return 1000;
