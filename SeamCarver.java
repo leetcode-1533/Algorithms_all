@@ -5,10 +5,11 @@ import edu.princeton.cs.algs4.Stopwatch;
 import edu.princeton.cs.algs4.ResizingArrayStack;
 
 public class SeamCarver {
-    private Color[][] pic;
     private int height;
     private int width;
     private double[][] P_energy, Inv_energy;
+    private Color[][] pic, Inv_pic;
+
     
     private void initEnergy() {
         for(int i = 0; i < height; i++) { // Iterator for rows
@@ -43,11 +44,11 @@ public class SeamCarver {
         height = picture.height();
         width = picture.width();
         pic = new Color[height][width];
+        Inv_pic = new Color[width][height];
         
         P_energy = new double[height][width];
         Inv_energy = new double[width][height];
 
-        initEnergy();
         
         for(int col = 0; col < picture.width(); col++) {
             for(int row = 0; row < picture.height(); row++) {
@@ -55,9 +56,17 @@ public class SeamCarver {
             }
         }
         
+        initEnergy();
+
         for(int i = 0; i < P_energy.length; i++) {
             for(int j = 0; j < P_energy[0].length; j++) {
                 Inv_energy[j][i] = P_energy[i][j];              
+            }       
+        }  
+        
+        for(int i = 0; i < pic.length; i++) {
+            for(int j = 0; j < pic[0].length; j++) {
+                Inv_pic[j][i] = pic[i][j];              
             }       
         }   
     }
@@ -68,12 +77,19 @@ public class SeamCarver {
         
         if(P_energy.length != Inv_energy[0].length) {
             Inv_energy = new double[width][height];
+            Inv_pic = new Color[width][height];
 
             for(int i = 0; i < P_energy.length; i++) {
                 for(int j = 0; j < P_energy[0].length; j++) {
                     Inv_energy[j][i] = P_energy[i][j];              
                 }       
-            }          
+            }
+            for(int i = 0; i < pic.length; i++) {
+                for(int j = 0; j < pic[0].length; j++) {
+                    Inv_pic[j][i] = pic[i][j];              
+                }       
+            } 
+            
         }
         
     }
@@ -84,12 +100,19 @@ public class SeamCarver {
         
         if(P_energy.length != Inv_energy[0].length) {
             P_energy = new double[width][height];
+            pic = new Color[width][height];
 
             for(int i = 0; i < Inv_energy.length; i++) {
                 for(int j = 0; j < Inv_energy[0].length; j++) {
                     P_energy[j][i] = Inv_energy[i][j];              
                 }       
-            }          
+            }        
+            
+            for(int i = 0; i < Inv_pic.length; i++) {
+                for(int j = 0; j < Inv_pic[0].length; j++) {
+                    pic[j][i] = Inv_pic[i][j];              
+                }       
+            } 
         }
     }
     
@@ -191,24 +214,26 @@ public class SeamCarver {
     }
     
     public void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
+        int afterwidth = energy[0].length - 1;
+        
         for(int i = 0; i < energy.length; i++) {
-            double[] temp = new double[energy[0].length - 1];
-            for(int j = 0; j < energy[0].length - 1; j++) {
+            double[] temp = new double[afterwidth];
+            for(int j = 0; j < afterwidth + 1; j++) {
                 if(j < seam[i])
                     temp[j] = energy[i][j];
                 else if(j > seam[i])
-                    temp[j] = energy[i][j - 1];
+                    temp[j - 1] = energy[i][j];
             }
             energy[i] = temp;
         } 
         
         for(int i = 0; i < pict.length; i++) {
-            Color[] temp = new Color[pict[0].length - 1];
-            for(int j = 0; j < pict[0].length - 1; j++) {
+            Color[] temp = new Color[afterwidth];
+            for(int j = 0; j < afterwidth + 1; j++) {
                 if(j < seam[i])
                     temp[j] = pict[i][j];
                 else if(j > seam[i])
-                    temp[j] = pict[i][j - 1];
+                    temp[j - 1] = pict[i][j];
             }
             pict[i] = temp;
         } 
@@ -223,22 +248,7 @@ public class SeamCarver {
     public void removeHorizontalSeam(int[] seam) {
         height--;
         
-        Color[][] Inv_pic = new Color[pic[0].length][pic.length];
-        for(int i = 0; i < pic.length; i++) {
-            for(int j = 0; j < pic[0].length; j++) {
-                Inv_pic[j][i] = pic[i][j];
-            }
-        }
-        
         removeVerticalSeam(seam, Inv_energy, Inv_pic);
-        
-        for(int i = 0; i < pic.length; i++) {
-            Color[] temp = new Color[pic[0].length];
-            for(int j = 0; j < pic[0].length; j++) {
-                temp[j] = Inv_pic[j][i];
-            }
-            pic[i] = temp;
-        }
     }
     
     public double energy(int x, int y) {
@@ -255,9 +265,17 @@ public class SeamCarver {
         return height;
     }
     
-//    public Picture picture() {
-//        return pic;
-//    }
+    public Picture picture() {
+        Hori_Modified();
+        Picture temp = new Picture(width, height);
+        for(int col = 0; col < width; col++) {
+            for(int row = 0; row < height; row++) {
+                temp.set(col, row, pic[row][col]);
+            }
+        }
+        
+        return temp;
+    }
     
     public static void main(String[] args) {
         Picture picture = new Picture(args[0]);
