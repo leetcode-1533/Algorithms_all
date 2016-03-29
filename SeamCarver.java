@@ -14,24 +14,27 @@ public class SeamCarver {
     private void initEnergy() {
         for(int i = 0; i < height; i++) { // Iterator for rows
             for(int j = 0; j < width; j++) { // Iterator for Columns
-                if(j == 0 || j == width - 1  || i == 0 || i == height - 1)
-                    P_energy[i][j] = 1000;
-                else
-                    P_energy[i][j] = Math.sqrt(centerDiff(j, i));
+                P_energy[i][j] = Math.sqrt(centerDiff(j, i, pic));
             }
         }
     }
         
-    private int centerDiff(int col, int row) {
-        Color above = pic[row - 1][col];
-        Color below = pic[row + 1][col];      
+    private int centerDiff(int col, int row, Color[][] Pic) {
+        width = Pic[0].length;
+        height = Pic.length;
+                
+        if(col == 0 || col == width - 1  || row == 0 || row == height - 1)
+            return 1000;
+        
+        Color above = Pic[row - 1][col];
+        Color below = Pic[row + 1][col];      
         int bdiff = above.getBlue() - below.getBlue();
         int rdiff = above.getRed() - below.getRed();
         int gdiff = above.getGreen() - below.getGreen();
         int vertDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
 
-        above = pic[row][col - 1];
-        below = pic[row][col + 1];    
+        above = Pic[row][col - 1];
+        below = Pic[row][col + 1];    
         bdiff = above.getBlue() - below.getBlue();
         rdiff = above.getRed() - below.getRed();
         gdiff = above.getGreen() - below.getGreen();
@@ -216,17 +219,6 @@ public class SeamCarver {
     public void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
         int afterwidth = energy[0].length - 1;
         
-        for(int i = 0; i < energy.length; i++) {
-            double[] temp = new double[afterwidth];
-            for(int j = 0; j < afterwidth + 1; j++) {
-                if(j < seam[i])
-                    temp[j] = energy[i][j];
-                else if(j > seam[i])
-                    temp[j - 1] = energy[i][j];
-            }
-            energy[i] = temp;
-        } 
-        
         for(int i = 0; i < pict.length; i++) {
             Color[] temp = new Color[afterwidth];
             for(int j = 0; j < afterwidth + 1; j++) {
@@ -237,6 +229,23 @@ public class SeamCarver {
             }
             pict[i] = temp;
         } 
+        
+        for(int i = 0; i < energy.length; i++) {
+            double[] temp = new double[afterwidth];
+            for(int j = 0; j < afterwidth + 1; j++) {
+                if(j < seam[i] - 1)
+                    temp[j] = energy[i][j];
+                else if(j == seam[i] - 1)
+                    temp[j] = Math.sqrt(centerDiff(j, i, pict));
+                else if(j == seam[i] + 1)
+                    temp[j - 1] = Math.sqrt(centerDiff(j - 1, i, pict));
+                else if(j > seam[i])
+                    temp[j - 1] = energy[i][j];
+            }
+            energy[i] = temp;
+        } 
+        
+
     }
     
     public void removeVerticalSeam(int[] seam) {
