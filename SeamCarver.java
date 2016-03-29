@@ -44,16 +44,17 @@ public class SeamCarver {
         width = picture.width();
         pic = new Color[height][width];
         
+        P_energy = new double[height][width];
+        Inv_energy = new double[width][height];
+
+        initEnergy();
+        
         for(int col = 0; col < picture.width(); col++) {
             for(int row = 0; row < picture.height(); row++) {
                 pic[row][col] = picture.get(col, row);
             }
         }
         
-        P_energy = new double[height][width];
-        Inv_energy = new double[width][height];
-
-        initEnergy();
         for(int i = 0; i < P_energy.length; i++) {
             for(int j = 0; j < P_energy[0].length; j++) {
                 Inv_energy[j][i] = P_energy[i][j];              
@@ -74,6 +75,7 @@ public class SeamCarver {
                 }       
             }          
         }
+        
     }
     
     private void Hori_Modified() {
@@ -188,12 +190,60 @@ public class SeamCarver {
         }
     }
     
-    public void removeVerticalSeam(int[] seam) {
+    public void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
+        for(int i = 0; i < energy.length; i++) {
+            double[] temp = new double[energy[0].length - 1];
+            for(int j = 0; j < energy[0].length - 1; j++) {
+                if(j < seam[i])
+                    temp[j] = energy[i][j];
+                else if(j > seam[i])
+                    temp[j] = energy[i][j - 1];
+            }
+            energy[i] = temp;
+        } 
         
+        for(int i = 0; i < pict.length; i++) {
+            Color[] temp = new Color[pict[0].length - 1];
+            for(int j = 0; j < pict[0].length - 1; j++) {
+                if(j < seam[i])
+                    temp[j] = pict[i][j];
+                else if(j > seam[i])
+                    temp[j] = pict[i][j - 1];
+            }
+            pict[i] = temp;
+        } 
+    }
+    
+    public void removeVerticalSeam(int[] seam) {
+        width--;
+
+        removeVerticalSeam(seam, P_energy, pic);
+    }
+    
+    public void removeHorizontalSeam(int[] seam) {
+        height--;
+        
+        Color[][] Inv_pic = new Color[pic[0].length][pic.length];
+        for(int i = 0; i < pic.length; i++) {
+            for(int j = 0; j < pic[0].length; j++) {
+                Inv_pic[j][i] = pic[i][j];
+            }
+        }
+        
+        removeVerticalSeam(seam, Inv_energy, Inv_pic);
+        
+        for(int i = 0; i < pic.length; i++) {
+            Color[] temp = new Color[pic[0].length];
+            for(int j = 0; j < pic[0].length; j++) {
+                temp[j] = Inv_pic[j][i];
+            }
+            pic[i] = temp;
+        }
     }
     
     public double energy(int x, int y) {
         // at column x, row y
+        Hori_Modified();
         return P_energy[y][x]; // energy per row is picture per row
     }
     
