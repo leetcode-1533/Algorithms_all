@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.util.Arrays;
+
 import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.Stopwatch;
@@ -44,6 +46,9 @@ public class SeamCarver {
     }
     
     public SeamCarver(Picture picture) {
+        if(picture == null)
+            throw new NullPointerException();
+        
         height = picture.height();
         width = picture.width();
         pic = new Color[height][width];
@@ -217,9 +222,18 @@ public class SeamCarver {
     }
     
     public void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
+        int oldseam = seam[0];
         int afterwidth = energy[0].length - 1;
         
         for(int i = 0; i < pict.length; i++) {
+            if(seam[i] < 0 || seam[i] >= afterwidth + 1)
+                throw new IllegalArgumentException();
+            if(Math.abs(seam[i] - oldseam) > 1)
+                throw new IllegalArgumentException();
+            else
+                oldseam = seam[i];
+
+            
             Color[] temp = new Color[afterwidth];
             for(int j = 0; j < afterwidth + 1; j++) {
                 if(j < seam[i])
@@ -249,12 +263,26 @@ public class SeamCarver {
     }
     
     public void removeVerticalSeam(int[] seam) {
+        if(seam == null)
+            throw new NullPointerException();
+        if(seam.length != height)
+            throw new IllegalArgumentException();
+        if(width <= 1)
+            throw new IllegalArgumentException();
+        
         width--;
 
         removeVerticalSeam(seam, P_energy, pic);
     }
     
     public void removeHorizontalSeam(int[] seam) {
+        if(seam == null)
+            throw new NullPointerException();
+        if(seam.length != width)
+            throw new IllegalArgumentException();
+        if(height <= 1)
+            throw new IllegalArgumentException();
+        
         height--;
         
         removeVerticalSeam(seam, Inv_energy, Inv_pic);
@@ -262,6 +290,8 @@ public class SeamCarver {
     
     public double energy(int x, int y) {
         // at column x, row y
+        if(x >= width || x < 0 || y >= height || y < 0)
+            throw new IndexOutOfBoundsException();
         Hori_Modified();
         return P_energy[y][x]; // energy per row is picture per row
     }
