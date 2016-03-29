@@ -58,15 +58,46 @@ public class SeamCarver {
             for(int j = 0; j < P_energy[0].length; j++) {
                 Inv_energy[j][i] = P_energy[i][j];              
             }       
+        }   
+    }
+    
+    private void Vert_Modified() {
+        int height = P_energy.length;
+        int width = P_energy[0].length;
+        
+        if(P_energy.length != Inv_energy[0].length) {
+            Inv_energy = new double[width][height];
+
+            for(int i = 0; i < P_energy.length; i++) {
+                for(int j = 0; j < P_energy[0].length; j++) {
+                    Inv_energy[j][i] = P_energy[i][j];              
+                }       
+            }          
         }
-     
+    }
+    
+    private void Hori_Modified() {
+        int height = Inv_energy.length;
+        int width = Inv_energy[0].length;
+        
+        if(P_energy.length != Inv_energy[0].length) {
+            P_energy = new double[width][height];
+
+            for(int i = 0; i < Inv_energy.length; i++) {
+                for(int j = 0; j < Inv_energy[0].length; j++) {
+                    P_energy[j][i] = Inv_energy[i][j];              
+                }       
+            }          
+        }
     }
     
     public int[] findVerticalSeam() {
+        Hori_Modified();
         return findVerticalSeam(P_energy);
     }
     
     public int[] findHorizontalSeam() {
+        Vert_Modified(); //lazy copy
         return findVerticalSeam(Inv_energy);
     }
     
@@ -157,12 +188,14 @@ public class SeamCarver {
         }
     }
     
+    public void removeVerticalSeam(int[] seam) {
+        
+    }
+    
     public double energy(int x, int y) {
         // at column x, row y
         return P_energy[y][x]; // energy per row is picture per row
     }
-    
-
     
     public int width() {
         return width;
