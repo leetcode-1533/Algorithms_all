@@ -14,42 +14,58 @@ public class SeamCarver {
         Inv_energy = new double[pic.width()][pic.height()];
 
         initEnergy();
+        for(int i = 0; i < P_energy.length; i++) {
+            for(int j = 0; j < P_energy[0].length; j++) {
+                Inv_energy[j][i] = P_energy[i][j];              
+            }       
+        }
      
     }
     
     public int[] findVerticalSeam() {
-        double[][] dist = new double[pic.height()][pic.width()];
-        int[][] verticTo = new int[pic.height()][pic.width()];
+        return findVerticalSeam(P_energy);
+    }
+    
+    public int[] findHorizontalSeam() {
+        return findVerticalSeam(Inv_energy);
+    }
+    
+    public int[] findVerticalSeam(double[][] energy) {  
+        int height = energy.length;
+        int width = energy[0].length;
         
-        for(int i = 1; i < pic.height(); i++ ) {
-            for(int j = 0; j < pic.width(); j++) {
+        double[][] dist = new double[height][width];
+        int[][] verticTo = new int[height][width];
+        
+        for(int i = 1; i < height; i++ ) {
+            for(int j = 0; j < width; j++) {
                 dist[i][j] = -1;
             }
         }
         
-        for(int j = 0; j < pic.width(); j++) {
-            dist[0][j] = P_energy[0][j];
+        for(int j = 0; j < width; j++) {
+            dist[0][j] = energy[0][j];
         }
         
-        for(int j = 0; j < pic.width(); j++) {
+        for(int j = 0; j < width; j++) {
             verticTo[0][j] = 0;
         }
         
-        vertSP(P_energy, dist, verticTo);
+        vertSP(energy, dist, verticTo);
         
         ResizingArrayStack<Integer> rev_route = new ResizingArrayStack<Integer>();
-        int endPoint = minIndex(dist[pic.height() - 1]);
+        int endPoint = minIndex(dist[height - 1]);
         rev_route.push(endPoint);
 
-        int next = verticTo[pic.height() - 1][endPoint];
+        int next = verticTo[height - 1][endPoint];
 
-        for(int i = pic.height() - 2; i >= 0; i--) {
+        for(int i = height - 2; i >= 0; i--) {
             rev_route.push(next);
             next = verticTo[i][next];
         }
         
-        int[] route = new int[pic.height()];
-        for(int i = 0; i < pic.height(); i++) 
+        int[] route = new int[height];
+        for(int i = 0; i < height; i++) 
             route[i] = rev_route.pop();
          
         return route;         
@@ -156,6 +172,11 @@ public class SeamCarver {
         StdOut.printf("Vroute \n");  
         int[] vroute = sc.findVerticalSeam();
         for(int item : vroute)
+            StdOut.printf("%3d ", item);
+        
+        StdOut.printf("\n Hroute \n");  
+        int[] hroute = sc.findHorizontalSeam();
+        for(int item : hroute)
             StdOut.printf("%3d ", item);
     }
 }
