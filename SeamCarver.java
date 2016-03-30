@@ -9,33 +9,33 @@ public class SeamCarver {
     private int width;
     private double[][] P_energy;
     private int[][] pic;
-    boolean transposed;
+    private boolean transposed;
 
     
     private void initEnergy() {
         for(int i = 0; i < height; i++) { // Iterator for rows
             for(int j = 0; j < width; j++) { // Iterator for Columns
-                P_energy[i][j] = centerDiff(j, i, pic);
+                P_energy[i][j] = centerDiff(j, i);
             }
         }
     }
         
-    private double centerDiff(int col, int row, int[][] Pic) {
-        int width = Pic[0].length;
-        int height = Pic.length;
+    private double centerDiff(int col, int row) {
+        int width = pic[0].length;
+        int height = pic.length;
                 
         if(col == 0 || col == width - 1  || row == 0 || row == height - 1)
             return 1000;
         
-        Color above = new Color(Pic[row - 1][col]);
-        Color below = new Color(Pic[row + 1][col]);      
+        Color above = new Color(pic[row - 1][col]);
+        Color below = new Color(pic[row + 1][col]);      
         int bdiff = above.getBlue() - below.getBlue();
         int rdiff = above.getRed() - below.getRed();
         int gdiff = above.getGreen() - below.getGreen();
         int vertDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
 
-        above = new Color(Pic[row][col - 1]);
-        below = new Color(Pic[row][col + 1]);    
+        above = new Color(pic[row][col - 1]);
+        below = new Color(pic[row][col + 1]);    
         bdiff = above.getBlue() - below.getBlue();
         rdiff = above.getRed() - below.getRed();
         gdiff = above.getGreen() - below.getGreen();
@@ -86,18 +86,25 @@ public class SeamCarver {
     }
     
     public int[] findVerticalSeam() {
-        Hori_Modified();
-        return findVerticalSeam(P_energy);
+        // by default vertical
+        if(transposed) {
+            transpose();
+            transposed = false;
+        }
+        return findSeam();
     }
     
     public int[] findHorizontalSeam() {
-        Vert_Modified(); //lazy copy
-        return findVerticalSeam(Inv_energy);
+        if(!transposed) {
+            transpose();
+            transposed = true;
+        }
+        return findSeam();
     }
     
-    private int[] findVerticalSeam(double[][] energy) {  
-        int height = energy.length;
-        int width = energy[0].length;
+    private int[] findSeam() {  
+        int height = P_energy.length;
+        int width = P_energy[0].length;
         
         double[][] dist = new double[height][width];
         int[][] verticTo = new int[height][width];
@@ -109,14 +116,14 @@ public class SeamCarver {
         }
         
         for(int j = 0; j < width; j++) {
-            dist[0][j] = energy[0][j];
+            dist[0][j] = P_energy[0][j];
         }
         
         for(int j = 0; j < width; j++) {
             verticTo[0][j] = 0;
         }
         
-        vertSP(energy, dist, verticTo);
+        vertSP(dist, verticTo);
         
         ResizingArrayStack<Integer> rev_route = new ResizingArrayStack<Integer>();
         int endPoint = minIndex(dist[height - 1]);
@@ -149,47 +156,52 @@ public class SeamCarver {
         return loc;
     }
     
-    private void vertSP(double[][] energy, double[][] dist, int[][] verticTo) {
-        for(int i = 0; i < energy.length - 1; i++) { // for next row
-            for(int j = 0; j < energy[0].length; j++) {
+    private void vertSP(double[][] dist, int[][] verticTo) {
+        for(int i = 0; i < P_energy.length - 1; i++) { // for next row
+            for(int j = 0; j < P_energy[0].length; j++) {
                 int[] curPoint = new int[] {i, j};
-                int[] nextPs = adj(j, energy);
+                int[] nextPs = adj(j);
                 for(int nP : nextPs) {
-                    refresh(curPoint, new int[] {i + 1, nP}, energy, dist, verticTo);
+                    refresh(curPoint, new int[] {i + 1, nP}, dist, verticTo);
                 }
             }
         }
         
     }
     
-    private int[] adj(int x, double[][] energy) {
+    private int[] adj(int x) {
         // for point at column x, give it adjacency neighbors at next row
         // Constrained by width columns<-> width, 
-        if(energy[0].length == 1)
+        if(P_energy[0].length == 1)
             return new int[] {0};
         if(x == 0) {
             return new int[] {0, 1};
-        } else if(x == energy[0].length - 1) {
-            return new int[] {energy[0].length - 2, energy[0].length - 1};
+        } else if(x == P_energy[0].length - 1) {
+            return new int[] {P_energy[0].length - 2, P_energy[0].length - 1};
         } else {
             return new int[] { x - 1, x, x + 1};
         }      
     }
     
-    private void refresh(int[] vFrom, int[] vTo, double[][] energy, double[][] dist, int[][] verticTo) {
+    private void refresh(int[] vFrom, int[] vTo, double[][] dist, int[][] verticTo) {
         // vFrom[0] for row, vFrom[1] for column
-        if(dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]] < dist[vTo[0]][vTo[1]] || dist[vTo[0]][vTo[1]] < 0) {
+        if(dist[vFrom[0]][vFrom[1]] + P_energy[vTo[0]][vTo[1]] < dist[vTo[0]][vTo[1]] || dist[vTo[0]][vTo[1]] < 0) {
             verticTo[vTo[0]][vTo[1]] = vFrom[1];  // record the above row column
-            dist[vTo[0]][vTo[1]] = dist[vFrom[0]][vFrom[1]] + energy[vTo[0]][vTo[1]];
+            dist[vTo[0]][vTo[1]] = dist[vFrom[0]][vFrom[1]] + P_energy[vTo[0]][vTo[1]];
         }
     }
     
-    private void removeVerticalSeam(int[] seam, double[][] energy, int[][] pict) {
+    private void removeSeam(int[] seam) {
+        if(seam == null)
+            throw new NullPointerException();
+        if(seam.length != pic.length)
+            throw new IllegalArgumentException();
+        
         int oldseam = seam[0];
-        int afterwidth = pict[0].length - 1;
+        int afterwidth = pic[0].length - 1;
 //        StdOut.println(afterwidth);
         
-        for(int i = 0; i < pict.length; i++) {
+        for(int i = 0; i < pic.length; i++) {
             if(seam[i] < 0 || seam[i] >= afterwidth + 1) {
                 throw new IllegalArgumentException();
             }
@@ -202,66 +214,65 @@ public class SeamCarver {
             int[] temp = new int[afterwidth];
             for(int j = 0; j < afterwidth + 1; j++) {
                 if(j < seam[i])
-                    temp[j] = pict[i][j];
+                    temp[j] = pic[i][j];
                 else if(j > seam[i])
-                    temp[j - 1] = pict[i][j];
+                    temp[j - 1] = pic[i][j];
             }
-            pict[i] = temp;
+            pic[i] = temp;
         } 
         
-        for(int i = 0; i < energy.length; i++) {
+        for(int i = 0; i < P_energy.length; i++) {
             double[] temp = new double[afterwidth];
             for(int j = 0; j < afterwidth + 1; j++) {
                 if(j < seam[i] - 1)
-                    temp[j] = energy[i][j];
+                    temp[j] = P_energy[i][j];
                 else if(j == seam[i] - 1)
-                    temp[j] = centerDiff(j, i, pict);
+                    temp[j] = centerDiff(j, i);
                 else if(j == seam[i] + 1)
-                    temp[j - 1] = centerDiff(j - 1, i, pict);
+                    temp[j - 1] = centerDiff(j - 1, i);
                 else if(j > seam[i])
-                    temp[j - 1] = energy[i][j];
+                    temp[j - 1] = P_energy[i][j];
             }
-            energy[i] = temp;
+            P_energy[i] = temp;
         } 
         
 
     }
     
     public void removeVerticalSeam(int[] seam) {
-        Hori_Modified();
+        if(transposed) {
+            transpose();
+            transposed = false;
+        }
         
-        if(seam == null)
-            throw new NullPointerException();
-        if(seam.length != pic.length)
-            throw new IllegalArgumentException();
         if(width <= 1)
-            throw new IllegalArgumentException();
-        
+            throw new IllegalArgumentException();      
         width--;
 
-        removeVerticalSeam(seam, P_energy, pic);
+        removeSeam(seam);
     }
     
     public void removeHorizontalSeam(int[] seam) {
-        Vert_Modified();
+        if(!transposed) {
+            transpose();
+            transposed = true;
+        }
         
-        if(seam == null)
-            throw new NullPointerException();
-        if(seam.length != Inv_pic.length)
-            throw new IllegalArgumentException();
         if(height <= 1)
-            throw new IllegalArgumentException();
-        
+            throw new IllegalArgumentException();    
         height--;
         
-        removeVerticalSeam(seam, Inv_energy, Inv_pic);
+        removeSeam(seam);
     }
     
     public double energy(int x, int y) {
         // at column x, row y
         if(x >= width || x < 0 || y >= height || y < 0)
             throw new IndexOutOfBoundsException();
-        Hori_Modified();
+        if(transposed) {
+            transpose();
+            transposed = false;
+        }
         return P_energy[y][x]; // energy per row is picture per row
     }
     
@@ -274,7 +285,11 @@ public class SeamCarver {
     }
     
     public Picture picture() {
-        Hori_Modified();
+        if(transposed) {
+            transpose();
+            transposed = false;
+        }
+        
         Picture temp = new Picture(width, height);
         for(int col = 0; col < width; col++) {
             for(int row = 0; row < height; row++) {
@@ -301,7 +316,15 @@ public class SeamCarver {
 //        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
 //        sc.picture();
 //        sc.removeVerticalSeam(sc.findVerticalSeam());
+//        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+//        sc.findHorizontalSeam();
+//        sc.removeVerticalSeam(sc.findVerticalSeam());
+//
+//        
+//        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
 
-        
+
+//
+//        
     }
 }
