@@ -16,12 +16,12 @@ public class SeamCarver {
     private void initEnergy() {
         for(int i = 0; i < height; i++) { // Iterator for rows
             for(int j = 0; j < width; j++) { // Iterator for Columns
-                P_energy[i][j] = Math.sqrt(centerDiff(j, i, pic));
+                P_energy[i][j] = centerDiff(j, i, pic);
             }
         }
     }
         
-    private int centerDiff(int col, int row, Color[][] Pic) {
+    private double centerDiff(int col, int row, Color[][] Pic) {
         int width = Pic[0].length;
         int height = Pic.length;
                 
@@ -42,7 +42,7 @@ public class SeamCarver {
         gdiff = above.getGreen() - below.getGreen();
         int horiDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
         
-        return vertDiff + horiDiff;        
+        return Math.sqrt(vertDiff + horiDiff);        
     }
     
     public SeamCarver(Picture picture) {
@@ -323,14 +323,11 @@ public class SeamCarver {
         
         SeamCarver sc = new SeamCarver(picture);
         
-        StdOut.printf("Vroute \n");  
-        int[] vroute = sc.findVerticalSeam();
-        for(int item : vroute)
-            StdOut.printf("%3d ", item);
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++)
+                StdOut.printf("%9.0f ", sc.energy(i, j));
+            StdOut.println();
+        }
         
-        StdOut.printf("\n Hroute \n");  
-        int[] hroute = sc.findHorizontalSeam();
-        for(int item : hroute)
-            StdOut.printf("%3d ", item);
     }
 }
