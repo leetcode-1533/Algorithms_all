@@ -223,12 +223,11 @@ public class SeamCarver {
     
     private void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
         int oldseam = seam[0];
-        int afterwidth = energy[0].length - 1;
+        int afterwidth = pict[0].length - 1;
 //        StdOut.println(afterwidth);
         
         for(int i = 0; i < pict.length; i++) {
             if(seam[i] < 0 || seam[i] >= afterwidth + 1) {
-                StdOut.println(seam.length + ',' + seam[i] + ',' + i);
                 throw new IllegalArgumentException();
             }
             if(Math.abs(seam[i] - oldseam) > 1)
@@ -268,7 +267,7 @@ public class SeamCarver {
     public void removeVerticalSeam(int[] seam) {
         if(seam == null)
             throw new NullPointerException();
-        if(seam.length != height)
+        if(seam.length != pic.length)
             throw new IllegalArgumentException();
         if(width <= 1)
             throw new IllegalArgumentException();
@@ -281,7 +280,7 @@ public class SeamCarver {
     public void removeHorizontalSeam(int[] seam) {
         if(seam == null)
             throw new NullPointerException();
-        if(seam.length != width)
+        if(seam.length != Inv_pic.length)
             throw new IllegalArgumentException();
         if(height <= 1)
             throw new IllegalArgumentException();
@@ -320,25 +319,46 @@ public class SeamCarver {
     }
     
     public static void main(String[] args) {
-//        Picture picture = new Picture(args[0]);
-//        StdOut.printf("image is %d pixels wide by %d pixels high.\n", picture.width(), picture.height());
-//        
-//        SeamCarver sc = new SeamCarver(picture);
-//        
-//        for (int j = 0; j < sc.height(); j++) {
-//            for (int i = 0; i < sc.width(); i++)
-//                StdOut.printf("%9.0f ", sc.energy(i, j));
-//            StdOut.println();
-//        }
-//        sc.picture();
-//        
-//        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
-//        sc.picture();
-//        sc.removeVerticalSeam(sc.findVerticalSeam());
-//        sc.picture();
-//        sc.removeHorizontalSeam(sc.findHorizontalSeam());
-//        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
-//
-//        
+        Picture picture = new Picture(args[0]);
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", picture.width(), picture.height());
+        
+        SeamCarver sc = new SeamCarver(picture);
+        
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++)
+                StdOut.printf("%9.0f ", sc.energy(i, j));
+            StdOut.println();
+        }
+        sc.picture();
+        
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.picture();
+        sc.removeVerticalSeam(sc.findVerticalSeam());
+        sc.picture();
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.picture();
+        sc.removeVerticalSeam(sc.findVerticalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.findVerticalSeam();
+        sc.findHorizontalSeam();
+        sc.picture();
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+
+
+        
     }
 }
