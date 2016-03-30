@@ -328,28 +328,16 @@ public class SeamCarver {
                 StdOut.printf("%9.0f ", sc.energy(i, j));
             StdOut.println();
         }
+        sc.picture();
         
-        StdOut.printf("%s (%d-by-%d image)\n", args[0], picture.width(), picture.height());
-        StdOut.println();
-        StdOut.println("The table gives the dual-gradient energies of each pixel.");
-        StdOut.println("The asterisks denote a minimum energy vertical or horizontal seam.");
-        StdOut.println();
+        sc.removeVerticalSeam(null);
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
+        sc.picture();
+        sc.removeVerticalSeam(sc.findVerticalSeam());
+        sc.picture();
+        sc.removeHorizontalSeam(sc.findHorizontalSeam());
+        StdOut.printf("image is %d pixels wide by %d pixels high.\n", sc.width(), sc.height());
 
-        SeamCarver carver = new SeamCarver(picture);
-        
-        StdOut.printf("Vertical seam: { ");
-        int[] verticalSeam = carver.findVerticalSeam();
-        for (int x : verticalSeam)
-            StdOut.print(x + " ");
-        StdOut.println("}");
-        PrintSeams.printSeam(carver, verticalSeam, false);
-
-        StdOut.printf("Horizontal seam: { ");
-        int[] horizontalSeam = carver.findHorizontalSeam();
-        for (int y : horizontalSeam)
-            StdOut.print(y + " ");
-        StdOut.println("}");
-        PrintSeams.printSeam(carver, horizontalSeam, true);
         
     }
 }

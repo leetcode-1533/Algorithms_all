@@ -13,6 +13,16 @@ import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
 
 public class PrintEnergy {
+    
+    public static void Printener(SeamCarver sc) {
+        StdOut.printf("Printing energy calculated for each pixel.\n");        
+
+        for (int j = 0; j < sc.height(); j++) {
+            for (int i = 0; i < sc.width(); i++)
+                StdOut.printf("%9.0f ", sc.energy(i, j));
+            StdOut.println();     
+        }
+    }
 
     public static void main(String[] args) {
         Picture picture = new Picture(args[0]);
