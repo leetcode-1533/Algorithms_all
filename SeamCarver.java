@@ -7,8 +7,9 @@ import edu.princeton.cs.algs4.ResizingArrayStack;
 public class SeamCarver {
     private int height;
     private int width;
-    private double[][] P_energy, Inv_energy;
-    private int[][] pic, Inv_pic;
+    private double[][] P_energy;
+    private int[][] pic;
+    boolean transposed;
 
     
     private void initEnergy() {
@@ -49,12 +50,8 @@ public class SeamCarver {
         
         height = picture.height();
         width = picture.width();
-        pic = new int[height][width];
-        Inv_pic = new int[width][height];
-        
+        pic = new int[height][width];    
         P_energy = new double[height][width];
-        Inv_energy = new double[width][height];
-
         
         for(int col = 0; col < picture.width(); col++) {
             for(int row = 0; row < picture.height(); row++) {
@@ -62,64 +59,30 @@ public class SeamCarver {
             }
         }
         
-        initEnergy();
-
-        for(int i = 0; i < P_energy.length; i++) {
-            for(int j = 0; j < P_energy[0].length; j++) {
-                Inv_energy[j][i] = P_energy[i][j];              
-            }       
-        }  
-        
-        for(int i = 0; i < pic.length; i++) {
-            for(int j = 0; j < pic[0].length; j++) {
-                Inv_pic[j][i] = pic[i][j];              
-            }       
-        }   
+        initEnergy(); 
+        transposed = false;
     }
     
-    private void Vert_Modified() {
+    private void transpose() {
         int height = P_energy.length;
         int width = P_energy[0].length;
         
-        if(P_energy[0].length != Inv_energy.length) {
-            Inv_energy = new double[width][height];
-            Inv_pic = new int[width][height];
+        double[][] temp_energy = new double[width][height];
+        int[][] temp_pic = new int[width][height];
 
-            for(int i = 0; i < P_energy.length; i++) {
-                for(int j = 0; j < P_energy[0].length; j++) {
-                    Inv_energy[j][i] = P_energy[i][j];              
-                }       
-            }
-            for(int i = 0; i < pic.length; i++) {
-                for(int j = 0; j < pic[0].length; j++) {
-                    Inv_pic[j][i] = pic[i][j];              
-                }       
-            } 
-            
+        for(int i = 0; i < P_energy.length; i++) {
+            for(int j = 0; j < P_energy[0].length; j++) {
+                temp_energy[j][i] = P_energy[i][j];              
+            }       
         }
+        for(int i = 0; i < pic.length; i++) {
+            for(int j = 0; j < pic[0].length; j++) {
+                temp_pic[j][i] = pic[i][j];              
+            }       
+        } 
         
-    }
-    
-    private void Hori_Modified() {
-        int height = Inv_energy.length;
-        int width = Inv_energy[0].length;
-        
-        if(P_energy.length != Inv_energy[0].length) {
-            P_energy = new double[width][height];
-            pic = new int[width][height];
-
-            for(int i = 0; i < Inv_energy.length; i++) {
-                for(int j = 0; j < Inv_energy[0].length; j++) {
-                    P_energy[j][i] = Inv_energy[i][j];              
-                }       
-            }        
-            
-            for(int i = 0; i < Inv_pic.length; i++) {
-                for(int j = 0; j < Inv_pic[0].length; j++) {
-                    pic[j][i] = Inv_pic[i][j];              
-                }       
-            } 
-        }
+        P_energy = temp_energy;
+        pic = temp_pic;          
     }
     
     public int[] findVerticalSeam() {
