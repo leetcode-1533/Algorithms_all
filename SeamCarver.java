@@ -8,7 +8,7 @@ public class SeamCarver {
     private int height;
     private int width;
     private double[][] P_energy, Inv_energy;
-    private Color[][] pic, Inv_pic;
+    private int[][] pic, Inv_pic;
 
     
     private void initEnergy() {
@@ -19,22 +19,22 @@ public class SeamCarver {
         }
     }
         
-    private double centerDiff(int col, int row, Color[][] Pic) {
+    private double centerDiff(int col, int row, int[][] Pic) {
         int width = Pic[0].length;
         int height = Pic.length;
                 
         if(col == 0 || col == width - 1  || row == 0 || row == height - 1)
             return 1000;
         
-        Color above = Pic[row - 1][col];
-        Color below = Pic[row + 1][col];      
+        Color above = new Color(Pic[row - 1][col]);
+        Color below = new Color(Pic[row + 1][col]);      
         int bdiff = above.getBlue() - below.getBlue();
         int rdiff = above.getRed() - below.getRed();
         int gdiff = above.getGreen() - below.getGreen();
         int vertDiff = bdiff * bdiff + rdiff * rdiff + gdiff * gdiff;
 
-        above = Pic[row][col - 1];
-        below = Pic[row][col + 1];    
+        above = new Color(Pic[row][col - 1]);
+        below = new Color(Pic[row][col + 1]);    
         bdiff = above.getBlue() - below.getBlue();
         rdiff = above.getRed() - below.getRed();
         gdiff = above.getGreen() - below.getGreen();
@@ -49,8 +49,8 @@ public class SeamCarver {
         
         height = picture.height();
         width = picture.width();
-        pic = new Color[height][width];
-        Inv_pic = new Color[width][height];
+        pic = new int[height][width];
+        Inv_pic = new int[width][height];
         
         P_energy = new double[height][width];
         Inv_energy = new double[width][height];
@@ -58,7 +58,7 @@ public class SeamCarver {
         
         for(int col = 0; col < picture.width(); col++) {
             for(int row = 0; row < picture.height(); row++) {
-                pic[row][col] = picture.get(col, row);
+                pic[row][col] = picture.get(col, row).getRGB();
             }
         }
         
@@ -83,7 +83,7 @@ public class SeamCarver {
         
         if(P_energy[0].length != Inv_energy.length) {
             Inv_energy = new double[width][height];
-            Inv_pic = new Color[width][height];
+            Inv_pic = new int[width][height];
 
             for(int i = 0; i < P_energy.length; i++) {
                 for(int j = 0; j < P_energy[0].length; j++) {
@@ -106,7 +106,7 @@ public class SeamCarver {
         
         if(P_energy.length != Inv_energy[0].length) {
             P_energy = new double[width][height];
-            pic = new Color[width][height];
+            pic = new int[width][height];
 
             for(int i = 0; i < Inv_energy.length; i++) {
                 for(int j = 0; j < Inv_energy[0].length; j++) {
@@ -221,7 +221,7 @@ public class SeamCarver {
         }
     }
     
-    private void removeVerticalSeam(int[] seam, double[][] energy, Color[][] pict) {
+    private void removeVerticalSeam(int[] seam, double[][] energy, int[][] pict) {
         int oldseam = seam[0];
         int afterwidth = pict[0].length - 1;
 //        StdOut.println(afterwidth);
@@ -236,7 +236,7 @@ public class SeamCarver {
                 oldseam = seam[i];
 
             
-            Color[] temp = new Color[afterwidth];
+            int[] temp = new int[afterwidth];
             for(int j = 0; j < afterwidth + 1; j++) {
                 if(j < seam[i])
                     temp[j] = pict[i][j];
@@ -315,7 +315,7 @@ public class SeamCarver {
         Picture temp = new Picture(width, height);
         for(int col = 0; col < width; col++) {
             for(int row = 0; row < height; row++) {
-                temp.set(col, row, pic[row][col]);
+                temp.set(col, row, new Color(pic[row][col]));
             }
         }
         
