@@ -1,9 +1,7 @@
 import java.awt.Color;
-import java.util.Arrays;
 
 import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.Stopwatch;
 import edu.princeton.cs.algs4.ResizingArrayStack;
 
 public class SeamCarver {
@@ -204,6 +202,8 @@ public class SeamCarver {
     private int[] adj(int x, double[][] energy) {
         // for point at column x, give it adjacency neighbors at next row
         // Constrained by width columns<-> width, 
+        if(energy[0].length == 1)
+            return new int[] {0};
         if(x == 0) {
             return new int[] {0, 1};
         } else if(x == energy[0].length - 1) {
@@ -251,9 +251,9 @@ public class SeamCarver {
                 if(j < seam[i] - 1)
                     temp[j] = energy[i][j];
                 else if(j == seam[i] - 1)
-                    temp[j] = Math.sqrt(centerDiff(j, i, pict));
+                    temp[j] = centerDiff(j, i, pict);
                 else if(j == seam[i] + 1)
-                    temp[j - 1] = Math.sqrt(centerDiff(j - 1, i, pict));
+                    temp[j - 1] = centerDiff(j - 1, i, pict);
                 else if(j > seam[i])
                     temp[j - 1] = energy[i][j];
             }
@@ -328,6 +328,28 @@ public class SeamCarver {
                 StdOut.printf("%9.0f ", sc.energy(i, j));
             StdOut.println();
         }
+        
+        StdOut.printf("%s (%d-by-%d image)\n", args[0], picture.width(), picture.height());
+        StdOut.println();
+        StdOut.println("The table gives the dual-gradient energies of each pixel.");
+        StdOut.println("The asterisks denote a minimum energy vertical or horizontal seam.");
+        StdOut.println();
+
+        SeamCarver carver = new SeamCarver(picture);
+        
+        StdOut.printf("Vertical seam: { ");
+        int[] verticalSeam = carver.findVerticalSeam();
+        for (int x : verticalSeam)
+            StdOut.print(x + " ");
+        StdOut.println("}");
+        PrintSeams.printSeam(carver, verticalSeam, false);
+
+        StdOut.printf("Horizontal seam: { ");
+        int[] horizontalSeam = carver.findHorizontalSeam();
+        for (int y : horizontalSeam)
+            StdOut.print(y + " ");
+        StdOut.println("}");
+        PrintSeams.printSeam(carver, horizontalSeam, true);
         
     }
 }

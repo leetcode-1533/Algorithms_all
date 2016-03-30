@@ -38,7 +38,7 @@ public class PrintSeams {
     private static final boolean HORIZONTAL   = true;
     private static final boolean VERTICAL     = false;
 
-    private static void printSeam(SeamCarver carver, int[] seam, boolean direction) {
+    static void printSeam(SeamCarver carver, int[] seam, boolean direction) {
         double totalSeamEnergy = 0.0;
 
         for (int row = 0; row < carver.height(); row++) {
