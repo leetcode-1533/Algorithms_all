@@ -94,7 +94,7 @@ public class BaseballElimination {
         for(int i = 0; i < games.V(); i++) {
             if(i != id) {
 //                StdOut.println(bestid + " versus " + t2id.get(id2t.get(i)).wins );
-                if(bestid - t2id.get(id2t.get(i)).wins <= 0)
+                if(bestid - t2id.get(id2t.get(i)).wins < 0)
                     return true;               
             }            
         }      
@@ -108,7 +108,7 @@ public class BaseballElimination {
         for(int i = 0; i < games.V(); i++) {
             if(i != id) {
 //                StdOut.println(bestid + " versus " + t2id.get(id2t.get(i)).wins );
-                if(bestid - t2id.get(id2t.get(i)).wins <= 0)
+                if(bestid - t2id.get(id2t.get(i)).wins < 0)
                     return id2t.get(i);               
             }            
         }      
