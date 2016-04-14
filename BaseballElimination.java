@@ -10,16 +10,16 @@ import java.util.ArrayList;
 
 public class BaseballElimination {
     private class Team {
-        int id;
-        int wins;
-        int losses;
-        int rem;
+        private int id;
+        private int wins;
+        private int losses;
+        private int rem;
         
-        Team(int num_id, int num_wins, int num_losses, int num_rem) {
-            id = num_id;
-            wins = num_wins;
-            losses = num_losses;
-            rem = num_rem;
+        Team(int num_Id, int num_Wins, int num_Losses, int num_Rem) {
+            id = num_Id;
+            wins = num_Wins;
+            losses = num_Losses;
+            rem = num_Rem;
         }
     }
     
@@ -37,17 +37,17 @@ public class BaseballElimination {
         t2id = new SeparateChainingHashST<String, Team>(numteam);
         id2t = new SeparateChainingHashST<Integer, String>(numteam); // dual hash table
         
-        for(int i = 0; i < numteam; i++) { // read each line
+        for (int i = 0; i < numteam; i++) { // read each line
             String teamname = in.readString();
             
             t2id.put(teamname, new Team(i, in.readInt(), in.readInt(), in.readInt()));
             id2t.put(i, teamname);
-            for(int sk = 0; sk < numteam; sk++) { // read diagonally
-                if(sk <= i) {
+            for (int sk = 0; sk < numteam; sk++) { // read diagonally
+                if  (sk <= i) {
                     in.readInt(); // skip
                 } else {
                     int rem = in.readInt();
-                    if(rem != 0) {
+                    if (rem != 0) {
                         games.addEdge(new Edge(i, sk, rem));
                     }
                 }
@@ -62,7 +62,7 @@ public class BaseballElimination {
     
     public boolean isEliminated(String team) {
         validTeam(team);
-        if(trivialEliminated(team))
+        if (trivialEliminated(team))
             return true;
         else {
             FlowNetwork teamflow = constrflow(team);
@@ -79,7 +79,7 @@ public class BaseballElimination {
     
     private boolean nontrivialEliminated(FlowNetwork flownet, FordFulkerson maxflow) {        
         int sumC = 0;
-        for(FlowEdge competes : flownet.adj(0)) {
+        for (FlowEdge competes : flownet.adj(0)) {
             sumC += competes.capacity(); 
         }
 //        StdOut.println();
@@ -91,10 +91,10 @@ public class BaseballElimination {
         int id = t2id.get(team).id;
         int bestid = wins(team) + remaining(team);
         
-        for(int i = 0; i < games.V(); i++) {
-            if(i != id) {
+        for (int i = 0; i < games.V(); i++) {
+            if (i != id) {
 //                StdOut.println(bestid + " versus " + t2id.get(id2t.get(i)).wins );
-                if(bestid - t2id.get(id2t.get(i)).wins < 0)
+                if (bestid - t2id.get(id2t.get(i)).wins < 0)
                     return true;               
             }            
         }      
@@ -105,10 +105,10 @@ public class BaseballElimination {
         int id = t2id.get(team).id;
         int bestid = wins(team) + remaining(team);
         
-        for(int i = 0; i < games.V(); i++) {
-            if(i != id) {
+        for (int i = 0; i < games.V(); i++) {
+            if (i != id) {
 //                StdOut.println(bestid + " versus " + t2id.get(id2t.get(i)).wins );
-                if(bestid - t2id.get(id2t.get(i)).wins < 0)
+                if (bestid - t2id.get(id2t.get(i)).wins < 0)
                     return id2t.get(i);               
             }            
         }      
@@ -121,7 +121,7 @@ public class BaseballElimination {
         ArrayList<String> container = null;
         
         String trivalTeam = trivialEliminatedteam(team);
-        if(trivalTeam != null) {
+        if (trivalTeam != null) {
             container = new ArrayList<String>();
             container.add(trivalTeam);   
         }   
@@ -129,13 +129,13 @@ public class BaseballElimination {
             FlowNetwork teamflow = constrflow(team);
             FordFulkerson maxflow = new FordFulkerson(teamflow, 0, 1);
 
-            if(nontrivialEliminated(teamflow, maxflow)) {
+            if (nontrivialEliminated(teamflow, maxflow)) {
                 container = new ArrayList<String>();
                 
-                for(int i = 0; i < games.V(); i++) {
-                    if(i != t2id.get(team).id) {
+                for (int i = 0; i < games.V(); i++) {
+                    if (i != t2id.get(team).id) {
                         int netid = gameid2flowid(team, i);
-                        if(maxflow.inCut(netid))
+                        if (maxflow.inCut(netid))
                             container.add(id2t.get(i));                      
                     }                   
                 }             
@@ -161,13 +161,13 @@ public class BaseballElimination {
         int teamStart = games.E() - games.degree(id) + 2; // equal to team 0's id
 //        StdOut.println("Team Start: " + teamStart);
         
-        for(int i = 0; i < games.V(); i++) { // i shouldn't connected to id
-            if(i != id) {
+        for (int i = 0; i < games.V(); i++) { // i shouldn't connected to id
+            if (i != id) {
                 flow.addEdge(new FlowEdge(teamStart + i, 1, bestid - t2id.get(id2t.get(i)).wins));
 
-                for(Edge compete : games.adj(i)) {
+                for (Edge compete : games.adj(i)) {
                     int i_against = compete.other(i);
-                    if(i_against != id && i_against > i) {
+                    if (i_against != id && i_against > i) {
                         // verified, neither i and i_against == id
                         // make it one way only
                         flow.addEdge(new FlowEdge(0, compID, compete.weight()));
@@ -184,7 +184,7 @@ public class BaseballElimination {
     }
     
     private void validTeam(String team) {
-        if(!t2id.contains(team))
+        if (!t2id.contains(team))
             throw new java.lang.IllegalArgumentException(team + " is invalid");       
     }
     
@@ -213,12 +213,12 @@ public class BaseballElimination {
         
         int id1 = t2id.get(team1).id;
         int id2 = t2id.get(team2).id;
-        for(Edge item : games.adj(id1)) {
+        for (Edge item : games.adj(id1)) {
             if (item.other(id1) == id2)
                 return (int) item.weight();   
         }
         
-        return 0; // if not found
+        return 0; // ifnot found
     }
     
     public Iterable<String> teams() {
