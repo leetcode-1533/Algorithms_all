@@ -65,7 +65,7 @@ public class BaseballElimination {
          */
         int id = t2id.get(team).id;
         int bestid = wins(team) + remaining(team);
-
+        StdOut.println("edgrees: " + games.E() + " degree: " + games.degree(id) + " numteam: " + numteam);
         FlowNetwork flow = new FlowNetwork(games.E() - games.degree(id) + numteam + 2); // one additional dummy vertex to make sure easy retrieval of team ID
         int compID = 2;
         int teamStart = games.E() - games.degree(id) + 2; // equal to team 0's id
@@ -75,8 +75,9 @@ public class BaseballElimination {
             if(i != id) {
                 for(Edge compete : games.adj(i)) {
                     int i_against = compete.other(i);
-                    if(i_against != id) {
+                    if(i_against != id && i_against > i) {
                         // verified, neither i and i_against == id
+                        // make it one way only
                         flow.addEdge(new FlowEdge(0, compID, compete.weight()));
                         flow.addEdge(new FlowEdge(teamStart + i, 1, bestid - t2id.get(id2t.get(i)).wins));
                         flow.addEdge(new FlowEdge(teamStart + i_against, 1, bestid - t2id.get(id2t.get(i_against)).wins));
