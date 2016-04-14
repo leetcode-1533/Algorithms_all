@@ -73,14 +73,14 @@ public class BaseballElimination {
         
         for(int i = 0; i < games.V(); i++) { // i shouldn't connected to id
             if(i != id) {
+                flow.addEdge(new FlowEdge(teamStart + i, 1, bestid - t2id.get(id2t.get(i)).wins));
+
                 for(Edge compete : games.adj(i)) {
                     int i_against = compete.other(i);
                     if(i_against != id && i_against > i) {
                         // verified, neither i and i_against == id
                         // make it one way only
                         flow.addEdge(new FlowEdge(0, compID, compete.weight()));
-                        flow.addEdge(new FlowEdge(teamStart + i, 1, bestid - t2id.get(id2t.get(i)).wins));
-                        flow.addEdge(new FlowEdge(teamStart + i_against, 1, bestid - t2id.get(id2t.get(i_against)).wins));
                         
                         flow.addEdge(new FlowEdge(compID, teamStart + i, Double.POSITIVE_INFINITY));
                         flow.addEdge(new FlowEdge(compID, teamStart + i_against, Double.POSITIVE_INFINITY));
@@ -89,7 +89,7 @@ public class BaseballElimination {
                 }
             }
         }
-        StdOut.println("compID: " + compID);        
+        assert compID == teamStart;
         return flow;
         
     }
