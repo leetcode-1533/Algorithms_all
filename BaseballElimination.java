@@ -188,7 +188,7 @@ public class BaseballElimination {
             throw new java.lang.IllegalArgumentException(team + " is invalid");       
     }
     
-    public int numberofTeams() {
+    public int numberOfTeams() {
         return numteam;
     }
     
