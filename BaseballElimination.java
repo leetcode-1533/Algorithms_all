@@ -54,27 +54,30 @@ public class BaseballElimination {
             }          
         }
         in.close();  
-        FlowNetwork flow = constrflow("Detroit");
-        StdOut.println(flow);
-        FordFulkerson maxflow = new FordFulkerson(flow, 0, 1);
-        StdOut.println(flow);
+//        FlowNetwork flow = constrflow("Detroit");
+//        StdOut.println(flow);
+//        FordFulkerson maxflow = new FordFulkerson(flow, 0, 1);
+//        StdOut.println(flow);
     }
     
     public boolean isEliminated(String team) {
         validTeam(team);
-        FlowNetwork teamflow = constrflow(team);
-        return (trivialEliminated(team) || nontrivialEliminated(teamflow));
+        if(trivialEliminated(team))
+            return true;
+        else {
+            FlowNetwork teamflow = constrflow(team);
+            FordFulkerson maxflow = new FordFulkerson(teamflow, 0, 1);
+            return nontrivialEliminated(teamflow, maxflow);
+        }
     }
     
-    private int gameID2flowID(String tar, int gameID) {
+    private int gameid2flowid(String tar, int gameID) {
         int id = t2id.get(tar).id;
         int teamStart = games.E() - games.degree(id) + 2;
         return gameID + teamStart;     
     }
     
-    private boolean nontrivialEliminated(FlowNetwork flownet) {
-        FordFulkerson maxflow = new FordFulkerson(flownet, 0, 1);
-        
+    private boolean nontrivialEliminated(FlowNetwork flownet, FordFulkerson maxflow) {        
         int sumC = 0;
         for(FlowEdge competes : flownet.adj(0)) {
             sumC += competes.capacity(); 
@@ -115,16 +118,31 @@ public class BaseballElimination {
     public Iterable<String> certificateOfElimination(String team) {
         validTeam(team);
         
-        ArrayList<String> container = new ArrayList<String>();
+        ArrayList<String> container = null;
         
         String trivalTeam = trivialEliminatedteam(team);
         if(trivalTeam != null) {
-            container.add(trivalTeam);          
+            container = new ArrayList<String>();
+            container.add(trivalTeam);   
+        }   
+        else {
+            FlowNetwork teamflow = constrflow(team);
+            FordFulkerson maxflow = new FordFulkerson(teamflow, 0, 1);
+
+            if(nontrivialEliminated(teamflow, maxflow)) {
+                container = new ArrayList<String>();
+                
+                for(int i = 0; i < games.V(); i++) {
+                    if(i != t2id.get(team).id) {
+                        int netid = gameid2flowid(team, i);
+                        if(maxflow.inCut(netid))
+                            container.add(id2t.get(i));                      
+                    }                   
+                }             
+            } 
         }
         
-        else
-        
-        
+        return container;
     }
     
     private FlowNetwork constrflow(String team) {
@@ -212,9 +230,9 @@ public class BaseballElimination {
         for (String team : division.teams()) {
             if (division.isEliminated(team)) {
                 StdOut.print(team + " is eliminated by the subset R = { ");
-//                for (String t : division.certificateOfElimination(team)) {
-//                    StdOut.print(t + " ");
-//                }
+                for (String t : division.certificateOfElimination(team)) {
+                    StdOut.print(t + " ");
+                }
                 StdOut.println("}");
             }
             else {
