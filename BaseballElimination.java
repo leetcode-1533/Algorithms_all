@@ -214,7 +214,7 @@ public class BaseballElimination {
         int id1 = t2id.get(team1).id;
         int id2 = t2id.get(team2).id;
         for(Edge item : games.adj(id1)) {
-            if(item.other(id1) == id2)
+            if (item.other(id1) == id2)
                 return (int) item.weight();   
         }
         
