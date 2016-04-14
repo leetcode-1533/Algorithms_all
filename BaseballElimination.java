@@ -6,7 +6,7 @@ import edu.princeton.cs.algs4.SeparateChainingHashST;
 import edu.princeton.cs.algs4.FlowEdge;
 import edu.princeton.cs.algs4.FlowNetwork;
 import edu.princeton.cs.algs4.FordFulkerson;
-
+import java.util.ArrayList;
 
 public class BaseballElimination {
     private class Team {
@@ -54,15 +54,25 @@ public class BaseballElimination {
             }          
         }
         in.close();  
+        FlowNetwork flow = constrflow("Detroit");
+        StdOut.println(flow);
+        FordFulkerson maxflow = new FordFulkerson(flow, 0, 1);
+        StdOut.println(flow);
     }
     
     public boolean isEliminated(String team) {
         validTeam(team);
-        return (trivialEliminated(team) || nontrivialEliminated(team));
+        FlowNetwork teamflow = constrflow(team);
+        return (trivialEliminated(team) || nontrivialEliminated(teamflow));
     }
     
-    private boolean nontrivialEliminated(String team) {
-        FlowNetwork flownet = constrflow(team);
+    private int gameID2flowID(String tar, int gameID) {
+        int id = t2id.get(tar).id;
+        int teamStart = games.E() - games.degree(id) + 2;
+        return gameID + teamStart;     
+    }
+    
+    private boolean nontrivialEliminated(FlowNetwork flownet) {
         FordFulkerson maxflow = new FordFulkerson(flownet, 0, 1);
         
         int sumC = 0;
@@ -75,20 +85,46 @@ public class BaseballElimination {
     }
     
     private boolean trivialEliminated(String team) {
-
         int id = t2id.get(team).id;
         int bestid = wins(team) + remaining(team);
         
         for(int i = 0; i < games.V(); i++) {
             if(i != id) {
 //                StdOut.println(bestid + " versus " + t2id.get(id2t.get(i)).wins );
-
                 if(bestid - t2id.get(id2t.get(i)).wins <= 0)
                     return true;               
             }            
+        }      
+        return false;      
+    }
+    
+    private String trivialEliminatedteam(String team) {
+        int id = t2id.get(team).id;
+        int bestid = wins(team) + remaining(team);
+        
+        for(int i = 0; i < games.V(); i++) {
+            if(i != id) {
+//                StdOut.println(bestid + " versus " + t2id.get(id2t.get(i)).wins );
+                if(bestid - t2id.get(id2t.get(i)).wins <= 0)
+                    return id2t.get(i);               
+            }            
+        }      
+        return null;       
+    }
+    
+    public Iterable<String> certificateOfElimination(String team) {
+        validTeam(team);
+        
+        ArrayList<String> container = new ArrayList<String>();
+        
+        String trivalTeam = trivialEliminatedteam(team);
+        if(trivalTeam != null) {
+            container.add(trivalTeam);          
         }
         
-        return false;      
+        else
+        
+        
     }
     
     private FlowNetwork constrflow(String team) {
