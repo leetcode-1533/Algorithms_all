@@ -92,11 +92,11 @@ public class BoggleSolver {
             if (!visited[opts]) {
                 visited[opts] = true;
                 int[] ij = index2ij(opts);
-                str += boggleboard.getLetter(ij[0], ij[1]);
-                if (trieset.longestPrefixOf(str) != null) {
-                    if (trieset.contains(str))
-                        container.add(str);
-                    dfs(visited.clone(), str, container, opts);
+                String tempstr = str + boggleboard.getLetter(ij[0], ij[1]);
+                if (trieset.keysWithPrefix(tempstr).iterator().hasNext()) {
+                    if (trieset.contains(tempstr))
+                        container.add(tempstr);
+                    dfs(visited.clone(), tempstr, container, opts);
                 }
             }
         }
