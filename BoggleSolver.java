@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.In;
 import java.util.HashSet;
 import java.util.ArrayList;
 
@@ -57,20 +58,30 @@ public class BoggleSolver {
     }
 
     public BoggleSolver(String[] dictionary) {
-        size = 4;
-        dir_init();
+
     }
 
     public Iterable<String> getAllValidWords(BoggleBoard board) {
+        size = board.rows();
+        dir_init();
         HashSet<String> container = new HashSet<>();
 
         return container;
     }
 
-    public static void main(String[] args) {
-        BoggleSolver test = new BoggleSolver(null);
-        int num = 10;
-        StdOut.println(test.index2ij(num)[0]);
-        StdOut.println(test.index2ij(num)[1]);
+    public static void main(String[] args)
+    {
+        In in = new In(args[0]);
+        String[] dictionary = in.readAllStrings();
+        BoggleSolver solver = new BoggleSolver(dictionary);
+        BoggleBoard board = new BoggleBoard(args[1]);
+        solver.getAllValidWords(board);
+//        int score = 0;
+//        for (String word : solver.getAllValidWords(board))
+//        {
+//            StdOut.println(word);
+//            score += solver.scoreOf(word);
+//        }
+//        StdOut.println("Score = " + score);
     }
 }
