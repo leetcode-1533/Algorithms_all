@@ -35,6 +35,22 @@ public class BoggleSolver {
         return i * size + j + 1;
     }
 
+    private int downright(int i, int j) {
+        return down(i, j) + 1;
+    }
+
+    private int upright(int i, int j) {
+        return up(i, j) + 1;
+    }
+
+    private int downleft(int i, int j) {
+        return down(i, j) - 1;
+    }
+
+    private int upleft(int i, int j) {
+        return up(i, j) - 1;
+    }
+
     private int[] index2ij(int index) {
         int i = index / size;
         int j = index - i * size;
@@ -60,6 +76,15 @@ public class BoggleSolver {
                 cur_dir.add(left(i, j));
             if (j < size - 1)
                 cur_dir.add(right(i, j));
+
+            if (i < size - 1 && j < size - 1) // have downright
+                cur_dir.add(downright(i, j));
+            if (i < size - 1 && j > 0)
+                cur_dir.add(downleft(i, j));
+            if (i > 0 && j > 0)
+                cur_dir.add(upleft(i, j));
+            if (i > 0 && j < size - 1)
+                cur_dir.add(upright(i, j));
 
             dir.add(cur_dir);
 
@@ -110,11 +135,11 @@ public class BoggleSolver {
         BoggleBoard board = new BoggleBoard(args[1]);
         solver.getAllValidWords(board);
 //        int score = 0;
-//        for (String word : solver.getAllValidWords(board))
-//        {
-//            StdOut.println(word);
+        for (String word : solver.getAllValidWords(board))
+        {
+            StdOut.println(word);
 //            score += solver.scoreOf(word);
-//        }
+        }
 //        StdOut.println("Score = " + score);
     }
 }
