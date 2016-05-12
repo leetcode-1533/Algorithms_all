@@ -38,18 +38,21 @@ public class BoggleSolver {
         int range = center(size, size);
         dir = new ArrayList<>(range);
         for (int index = 0; index < range; index++) {
+            Bag<Integer> cur_dir = new Bag<>();
             int[] ij = index2ij(index);
             int i = ij[0];
             int j = ij[1];
-//
-//            if(i > 1)
-//                dir.get(index).add(up(i, j));
-//            if(i < size)
-//                dir.get(index).add(down(i, j));
-//            if(j > 1)
-//                dir.get(index).add(left(i, j));
-//            if(j < size)
-//                dir.get(index).add(right(i, j));
+
+            if(i > 1)
+                cur_dir.add(up(i, j));
+            if(i < size)
+                cur_dir.add(down(i, j));
+            if(j > 1)
+                cur_dir.add(left(i, j));
+            if(j < size)
+                cur_dir.add(right(i, j));
+
+            dir.add(cur_dir);
         }
     }
 
@@ -69,6 +72,5 @@ public class BoggleSolver {
         int num = 10;
         StdOut.println(test.index2ij(num)[0]);
         StdOut.println(test.index2ij(num)[1]);
-
     }
 }
