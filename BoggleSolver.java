@@ -1,15 +1,18 @@
 import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.TrieSET;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.lang.StringBuilder;
 
+
 public class BoggleSolver {
 
     private int size;
     private ArrayList<Bag<Integer>> dir;
+    private TrieSET trieset;
 
     private int center(int i, int j) {
         return i * size + j;
@@ -46,13 +49,13 @@ public class BoggleSolver {
             int i = ij[0];
             int j = ij[1];
 
-            if(i > 1)
+            if (i > 1)
                 cur_dir.add(up(i, j));
-            if(i < size)
+            if (i < size)
                 cur_dir.add(down(i, j));
-            if(j > 1)
+            if (j > 1)
                 cur_dir.add(left(i, j));
-            if(j < size)
+            if (j < size)
                 cur_dir.add(right(i, j));
 
             dir.add(cur_dir);
@@ -60,7 +63,9 @@ public class BoggleSolver {
     }
 
     public BoggleSolver(String[] dictionary) {
-
+        trieset = new TrieSET();
+        for (String item : dictionary)
+            trieset.add(item);
     }
 
     public Iterable<String> getAllValidWords(BoggleBoard board) {
