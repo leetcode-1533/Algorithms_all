@@ -59,13 +59,18 @@ public class TrieSET implements Iterable<String> {
      *     <tt>false</tt> otherwise
      * @throws NullPointerException if <tt>key</tt> is <tt>null</tt>
      */
-    public boolean contains(String key) {
-        Node x = get(root, key, 0);
-        if (x == null) return false;
-        return x.isString;
+//    public boolean contains(String key) {
+//        Node x = get(root, key, 0);
+//        if (x == null) return false;
+//        return x.isString;
+//    }
+
+    public boolean contains(Object x) {
+        Node test = (Node) x;
+        if (test == null) return false;
+        return test.isString;
     }
 
-//    public boolean contains(String key, Object )
     private Node get(Node x, String key, int d) {
         if (x == null) return null;
         if (d == key.length()) return x;

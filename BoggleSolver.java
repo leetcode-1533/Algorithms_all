@@ -132,7 +132,7 @@ public class BoggleSolver {
                 }
 
                 if (child_node != null) {
-                    if (trieset.contains(tempstr) && tempstr.length() > 2)
+                    if ( && tempstr.length() > 2)
                         container.add(tempstr);
                     dfs(child_node, tempvisited, tempstr, container, opts);
                 }
