@@ -1,11 +1,9 @@
 import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.TrieSET;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
-
 
 public class BoggleSolver {
 
@@ -160,7 +158,7 @@ public class BoggleSolver {
         String[] dictionary = in.readAllStrings();
         BoggleSolver solver = new BoggleSolver(dictionary);
         BoggleBoard board = new BoggleBoard(args[1]);
-        StdOut.println(board.getLetter(0, 0));
+
         solver.getAllValidWords(board);
         int score = 0;
         for (String word : solver.getAllValidWords(board))
