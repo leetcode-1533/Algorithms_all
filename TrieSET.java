@@ -65,6 +65,7 @@ public class TrieSET implements Iterable<String> {
         return x.isString;
     }
 
+//    public boolean contains(String key, Object )
     private Node get(Node x, String key, int d) {
         if (x == null) return null;
         if (d == key.length()) return x;

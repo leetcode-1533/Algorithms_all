@@ -120,12 +120,16 @@ public class BoggleSolver {
                 tempvisited[opts] = true;
 
                 String tempstr;
+                Object child_node;
                 char cur_char = boggleboard.getLetter(ij[0], ij[1]);
-                if(cur_char == 'Q')
+                if (cur_char == 'Q') {
                     tempstr = str + "QU";
-                else
+                    child_node = trieset.getNode(tempstr, str.length() + 1, cur_node);
+                }
+                else {
                     tempstr = str + cur_char;
-                Object child_node = trieset.getNode(tempstr, str.length() + 1, cur_node);
+                    child_node = trieset.getNode(tempstr, str.length() + 1, cur_node);
+                }
 
                 if (child_node != null) {
                     if (trieset.contains(tempstr) && tempstr.length() > 2)
@@ -160,7 +164,7 @@ public class BoggleSolver {
         String[] dictionary = in.readAllStrings();
         BoggleSolver solver = new BoggleSolver(dictionary);
         BoggleBoard board = new BoggleBoard(args[1]);
-        
+
         solver.getAllValidWords(board);
         int score = 0;
         for (String word : solver.getAllValidWords(board))
