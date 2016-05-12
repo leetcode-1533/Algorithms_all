@@ -115,16 +115,36 @@ public class BoggleSolver {
     private void dfs(boolean[] visited, String str, Set<String> container, int index) {
         for (Integer opts : dir.get(index)) {
             if (!visited[opts]) {
-                visited[opts] = true;
                 int[] ij = index2ij(opts);
+
+                boolean[] tempvisited = visited.clone();
+                tempvisited[opts] = true;
                 String tempstr = str + boggleboard.getLetter(ij[0], ij[1]);
                 if (trieset.keysWithPrefix(tempstr).iterator().hasNext()) {
-                    if (trieset.contains(tempstr))
+                    if (trieset.contains(tempstr) && tempstr.length() > 2)
                         container.add(tempstr);
-                    dfs(visited.clone(), tempstr, container, opts);
+                    dfs(tempvisited, tempstr, container, opts);
                 }
             }
         }
+    }
+
+    public int scoreOf(String word) {
+        if (word == null)
+            throw new NullPointerException();
+
+        if (word.length() <= 2)
+            return 0;
+        if (word.length() <= 4)
+            return 1;
+        if (word.length() <= 5)
+            return 2;
+        if (word.length() <= 6)
+            return 3;
+        if (word.length() <= 7)
+            return 5;
+        else
+            return 11;
     }
 
     public static void main(String[] args)
@@ -134,12 +154,12 @@ public class BoggleSolver {
         BoggleSolver solver = new BoggleSolver(dictionary);
         BoggleBoard board = new BoggleBoard(args[1]);
         solver.getAllValidWords(board);
-//        int score = 0;
+        int score = 0;
         for (String word : solver.getAllValidWords(board))
         {
             StdOut.println(word);
-//            score += solver.scoreOf(word);
+            score += solver.scoreOf(word);
         }
-//        StdOut.println("Score = " + score);
+        StdOut.println("Score = " + score);
     }
 }
