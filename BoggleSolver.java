@@ -119,7 +119,14 @@ public class BoggleSolver {
 
                 boolean[] tempvisited = visited.clone();
                 tempvisited[opts] = true;
-                String tempstr = str + boggleboard.getLetter(ij[0], ij[1]);
+
+                String tempstr;
+                char cur_char = boggleboard.getLetter(ij[0], ij[1]);
+                if(cur_char == 'Q')
+                    tempstr = str + "QU";
+                else
+                    tempstr = str + cur_char;
+
                 if (trieset.keysWithPrefix(tempstr).iterator().hasNext()) {
                     if (trieset.contains(tempstr) && tempstr.length() > 2)
                         container.add(tempstr);
@@ -153,6 +160,7 @@ public class BoggleSolver {
         String[] dictionary = in.readAllStrings();
         BoggleSolver solver = new BoggleSolver(dictionary);
         BoggleBoard board = new BoggleBoard(args[1]);
+        StdOut.println(board.getLetter(0, 0));
         solver.getAllValidWords(board);
         int score = 0;
         for (String word : solver.getAllValidWords(board))
