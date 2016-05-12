@@ -1,9 +1,12 @@
-
+import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.StdOut;
 import java.util.HashSet;
+import java.util.ArrayList;
+
 public class BoggleSolver {
 
     private int size;
+    private ArrayList<Bag<Integer>> dir;
 
     private int center(int i, int j) {
         return (i - 1) * size + j - 1;
@@ -26,17 +29,40 @@ public class BoggleSolver {
     }
 
     private int[] index2ij(int index) {
-        int i = index / size;
-        int j = index - i * size;
+        int i = index / size + 1;
+        int j = index - (i - 1) * size + 1;
         return new int[] {i, j};
+    }
+
+    private void dir_init() {
+        int range = center(size, size);
+        dir = new ArrayList<>(range);
+        for (int index = 0; index < range; index++) {
+            int[] ij = index2ij(index);
+            int i = ij[0];
+            int j = ij[1];
+//
+//            if(i > 1)
+//                dir.get(index).add(up(i, j));
+//            if(i < size)
+//                dir.get(index).add(down(i, j));
+//            if(j > 1)
+//                dir.get(index).add(left(i, j));
+//            if(j < size)
+//                dir.get(index).add(right(i, j));
+        }
     }
 
     public BoggleSolver(String[] dictionary) {
         size = 4;
-
+        dir_init();
     }
 
+    public Iterable<String> getAllValidWords(BoggleBoard board) {
+        HashSet<String> container = new HashSet<>();
 
+        return container;
+    }
 
     public static void main(String[] args) {
         BoggleSolver test = new BoggleSolver(null);
