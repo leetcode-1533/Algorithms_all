@@ -1,8 +1,10 @@
 import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.lang.StringBuilder;
 
 public class BoggleSolver {
 
@@ -10,28 +12,28 @@ public class BoggleSolver {
     private ArrayList<Bag<Integer>> dir;
 
     private int center(int i, int j) {
-        return (i - 1) * size + j - 1;
+        return i * size + j;
     }
 
     private int up(int i, int j) {
-        return (i - 2) * size + j - 1;
-    }
-
-    private int down(int i, int j) {
-        return i * size + j - 1;
-    }
-
-    private int left(int i, int j) {
-        return (i - 1) * size + j - 2;
-    }
-
-    private int right(int i, int j) {
         return (i - 1) * size + j;
     }
 
+    private int down(int i, int j) {
+        return (i + 1) * size + j;
+    }
+
+    private int left(int i, int j) {
+        return i * size + j - 1;
+    }
+
+    private int right(int i, int j) {
+        return i * size + j + 1;
+    }
+
     private int[] index2ij(int index) {
-        int i = index / size + 1;
-        int j = index - (i - 1) * size + 1;
+        int i = index / size;
+        int j = index - i * size;
         return new int[] {i, j};
     }
 
@@ -63,10 +65,14 @@ public class BoggleSolver {
 
     public Iterable<String> getAllValidWords(BoggleBoard board) {
         size = board.rows();
-        dir_init();
-        HashSet<String> container = new HashSet<>();
+//        dir_init();
+        Set<String> container = new HashSet<>();
 
         return container;
+    }
+
+    private void dfs(boolean[] visited, StringBuilder str, Set<String> container) {
+
     }
 
     public static void main(String[] args)
@@ -76,6 +82,7 @@ public class BoggleSolver {
         BoggleSolver solver = new BoggleSolver(dictionary);
         BoggleBoard board = new BoggleBoard(args[1]);
         solver.getAllValidWords(board);
+        StdOut.println(solver.index2ij(15)[1]);
 //        int score = 0;
 //        for (String word : solver.getAllValidWords(board))
 //        {
