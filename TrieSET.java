@@ -126,6 +126,14 @@ public class TrieSET implements Iterable<String> {
      * @return all of the keys in the set that start with <tt>prefix</tt>,
      *     as an iterable
      */
+    public Node getNode(String cur_str, int loc, Object previousNode) {
+        return get((Node) previousNode, cur_str, loc);
+    }
+
+    public Node getRoot() {
+        return root;
+    }
+
     public Iterable<String> keysWithPrefix(String prefix) {
         Queue<String> results = new Queue<String>();
         Node x = get(root, prefix, 0);

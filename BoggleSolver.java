@@ -105,12 +105,13 @@ public class BoggleSolver {
         dir_init();
 
         Set<String> container = new HashSet<>();
-        dfs(new boolean[center(size - 1, size - 1) + 1], "", container, center(size - 1, size - 1) + 1);
+        Object root = trieset.getRoot();
+        dfs(root, new boolean[center(size - 1, size - 1) + 1], "", container, center(size - 1, size - 1) + 1);
 
         return container;
     }
 
-    private void dfs(boolean[] visited, String str, Set<String> container, int index) {
+    private void dfs(Object cur_node, boolean[] visited, String str, Set<String> container, int index) {
         for (Integer opts : dir.get(index)) {
             if (!visited[opts]) {
                 int[] ij = index2ij(opts);
@@ -124,11 +125,12 @@ public class BoggleSolver {
                     tempstr = str + "QU";
                 else
                     tempstr = str + cur_char;
+                Object child_node = trieset.getNode(tempstr, str.length() + 1, cur_node);
 
-                if (trieset.keysWithPrefix(tempstr).iterator().hasNext()) {
+                if (child_node != null) {
                     if (trieset.contains(tempstr) && tempstr.length() > 2)
                         container.add(tempstr);
-                    dfs(tempvisited, tempstr, container, opts);
+                    dfs(child_node, tempvisited, tempstr, container, opts);
                 }
             }
         }
@@ -158,7 +160,7 @@ public class BoggleSolver {
         String[] dictionary = in.readAllStrings();
         BoggleSolver solver = new BoggleSolver(dictionary);
         BoggleBoard board = new BoggleBoard(args[1]);
-
+        
         solver.getAllValidWords(board);
         int score = 0;
         for (String word : solver.getAllValidWords(board))
