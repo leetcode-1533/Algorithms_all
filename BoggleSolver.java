@@ -7,30 +7,30 @@ import java.util.ArrayList;
 
 public class BoggleSolver {
 
-    private int size;
+    private int N, M;
     private ArrayList<Bag<Integer>> dir;
     private BoggleBoard boggleboard;
 
     private TrieSET trieset;
 
-    private int center(int i, int j) {
-        return i * size + j;
-    }
+//    private int center(int i, int j) {
+//        return i * N + j;
+//    }
 
     private int up(int i, int j) {
-        return (i - 1) * size + j;
+        return (i - 1) * N + j;
     }
 
     private int down(int i, int j) {
-        return (i + 1) * size + j;
+        return (i + 1) * N + j;
     }
 
     private int left(int i, int j) {
-        return i * size + j - 1;
+        return i * N + j - 1;
     }
 
     private int right(int i, int j) {
-        return i * size + j + 1;
+        return i * N + j + 1;
     }
 
     private int downright(int i, int j) {
@@ -50,17 +50,17 @@ public class BoggleSolver {
     }
 
     private int[] index2ij(int index) {
-        int i = index / size;
-        int j = index - i * size;
+        int i = index / N;
+        int j = index - i * N;
         return new int[] {i, j};
     }
 
     private void dir_init() {
-        int range = center(size - 1, size - 1);
-        dir = new ArrayList<>(range + 2);
+        int range = M * N - 1; // to 15
+        dir = new ArrayList<>(range + 2); // of size 17
         Bag<Integer> master = new Bag<>();
 
-        for (int index = 0; index < range + 1; index++) {
+        for (int index = 0; index < range + 1; index++) { // 16 times
             Bag<Integer> cur_dir = new Bag<>();
             int[] ij = index2ij(index);
             int i = ij[0];
@@ -68,20 +68,20 @@ public class BoggleSolver {
 
             if (i > 0)
                 cur_dir.add(up(i, j));
-            if (i < size - 1)
+            if (i < N - 1)
                 cur_dir.add(down(i, j));
             if (j > 0)
                 cur_dir.add(left(i, j));
-            if (j < size - 1)
+            if (j < M - 1)
                 cur_dir.add(right(i, j));
 
-            if (i < size - 1 && j < size - 1) // have downright
+            if (i < N - 1 && j < M - 1) // have downright
                 cur_dir.add(downright(i, j));
-            if (i < size - 1 && j > 0)
+            if (i < N - 1 && j > 0)
                 cur_dir.add(downleft(i, j));
             if (i > 0 && j > 0)
                 cur_dir.add(upleft(i, j));
-            if (i > 0 && j < size - 1)
+            if (i > 0 && j < M - 1)
                 cur_dir.add(upright(i, j));
 
             dir.add(cur_dir);
@@ -90,7 +90,7 @@ public class BoggleSolver {
         }
 
         // master bag
-        dir.add(master); // of index center(size, size) + 1
+        dir.add(master);
     }
 
     public BoggleSolver(String[] dictionary) {
@@ -101,18 +101,19 @@ public class BoggleSolver {
 
     public Iterable<String> getAllValidWords(BoggleBoard board) {
         boggleboard = board;
-        size = board.rows();
+        M = board.rows();
+        N = board.cols();
         dir_init();
 
         Set<String> container = new HashSet<>();
         Node root = trieset.getRoot();
-        dfs(root, new boolean[center(size - 1, size - 1) + 1], "", container, center(size - 1, size - 1) + 1);
+        dfs(root, new boolean[M * N], "", container, M * N);
 
         return container;
     }
 
     private void dfs(Node cur_node, boolean[] visited, String str, Set<String> container, int index) {
-        for (Integer opts : dir.get(index)) {
+        for (int opts : dir.get(index)) {
             if (!visited[opts]) {
                 int[] ij = index2ij(opts);
 
@@ -143,19 +144,23 @@ public class BoggleSolver {
     public int scoreOf(String word) {
         if (word == null)
             throw new NullPointerException();
-
-        if (word.length() <= 2)
+        if(trieset.contains(word)) {
+            if (word.length() <= 2)
+                return 0;
+            if (word.length() <= 4)
+                return 1;
+            if (word.length() <= 5)
+                return 2;
+            if (word.length() <= 6)
+                return 3;
+            if (word.length() <= 7)
+                return 5;
+            else
+                return 11;
+        }
+        else {
             return 0;
-        if (word.length() <= 4)
-            return 1;
-        if (word.length() <= 5)
-            return 2;
-        if (word.length() <= 6)
-            return 3;
-        if (word.length() <= 7)
-            return 5;
-        else
-            return 11;
+        }
     }
 
     public static void main(String[] args)
