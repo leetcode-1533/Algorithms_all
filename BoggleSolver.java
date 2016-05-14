@@ -105,13 +105,13 @@ public class BoggleSolver {
         dir_init();
 
         Set<String> container = new HashSet<>();
-        Object root = trieset.getRoot();
+        Node root = trieset.getRoot();
         dfs(root, new boolean[center(size - 1, size - 1) + 1], "", container, center(size - 1, size - 1) + 1);
 
         return container;
     }
 
-    private void dfs(Object cur_node, boolean[] visited, String str, Set<String> container, int index) {
+    private void dfs(Node cur_node, boolean[] visited, String str, Set<String> container, int index) {
         for (Integer opts : dir.get(index)) {
             if (!visited[opts]) {
                 int[] ij = index2ij(opts);
@@ -120,19 +120,19 @@ public class BoggleSolver {
                 tempvisited[opts] = true;
 
                 String tempstr;
-                Object child_node;
+                Node child_node;
                 char cur_char = boggleboard.getLetter(ij[0], ij[1]);
                 if (cur_char == 'Q') {
                     tempstr = str + "QU";
-                    child_node = trieset.getNode(tempstr, str.length() + 1, cur_node);
+                    child_node = trieset.getNode(tempstr, str.length(), cur_node);
                 }
                 else {
                     tempstr = str + cur_char;
-                    child_node = trieset.getNode(tempstr, str.length() + 1, cur_node);
+                    child_node = trieset.getNode(tempstr, str.length(), cur_node);
                 }
 
                 if (child_node != null) {
-                    if (trieset.contains(tempstr) && tempstr.length() > 2)
+                    if (TrieSET.isstring(child_node) && tempstr.length() > 2)
                         container.add(tempstr);
                     dfs(child_node, tempvisited, tempstr, container, opts);
                 }

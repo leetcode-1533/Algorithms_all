@@ -41,10 +41,10 @@ public class TrieSET implements Iterable<String> {
     private int N;          // number of keys in trie
 
     // R-way trie node
-    private static class Node {
-        private Node[] next = new Node[R];
-        private boolean isString;
-    }
+//    private static class Node {
+//        private Node[] next = new Node[R];
+//        private boolean isString;
+//    }
 
     /**
      * Initializes an empty set of strings.
@@ -65,11 +65,9 @@ public class TrieSET implements Iterable<String> {
         return x.isString;
     }
 
-
-    public boolean isstring(Object x) {
-        Node test = (Node) x;
-        if (test == null) return false;
-        return test.isString;
+    public static boolean isstring(Node x) {
+        if (x == null) return false;
+        return x.isString;
     }
 
     private Node get(Node x, String key, int d) {
@@ -133,8 +131,8 @@ public class TrieSET implements Iterable<String> {
      * @return all of the keys in the set that start with <tt>prefix</tt>,
      *     as an iterable
      */
-    public Node getNode(String cur_str, int loc, Object previousNode) {
-        return get((Node) previousNode, cur_str, loc);
+    public Node getNode(String cur_str, int loc, Node previousNode) {
+        return get(previousNode, cur_str, loc);
     }
 
     public Node getRoot() {
