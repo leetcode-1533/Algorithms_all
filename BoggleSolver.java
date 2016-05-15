@@ -67,27 +67,27 @@ public class BoggleSolver {
             int j = ij[1];
 
             if (M > 1) {
-                if (i > 0 && M > 1)
+                if (i > 0)
                     cur_dir.add(up(i, j));
-                if (i < N - 1 && M > 1)
+                if (i < M - 1)
                     cur_dir.add(down(i, j));
             }
 
             if (N > 1) {
-                if (j > 0 && N > 1)
+                if (j > 0)
                     cur_dir.add(left(i, j));
-                if (j < M - 1 && N > 1)
+                if (j < N - 1)
                     cur_dir.add(right(i, j));
             }
 
             if (M > 1 && N > 1) {
-                if (i < N - 1 && j < M - 1) // have downright
+                if (i < M - 1 && j < N - 1) // have downright
                     cur_dir.add(downright(i, j));
-                if (i < N - 1 && j > 0)
+                if (i < M - 1 && j > 0)
                     cur_dir.add(downleft(i, j));
                 if (i > 0 && j > 0)
                     cur_dir.add(upleft(i, j));
-                if (i > 0 && j < M - 1)
+                if (i > 0 && j < N - 1)
                     cur_dir.add(upright(i, j));
             }
 
