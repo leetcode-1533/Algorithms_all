@@ -9,7 +9,7 @@ public class BoggleSolver {
 
     private int N, M;
     private ArrayList<Bag<Integer>> dir;
-    private BoggleBoard boggleboard;
+    private char[][] char_board;
 
     private TrieSET trieset;
 
@@ -107,10 +107,19 @@ public class BoggleSolver {
     }
 
     public Iterable<String> getAllValidWords(BoggleBoard board) {
-        boggleboard = board;
+//        boggleboard = board;
         M = board.rows();
         N = board.cols();
+
+        char_board = new char[M][N];
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                char_board[i][j] = board.getLetter(i, j);
+            }
+        }
+
         dir_init();
+
 
         Set<String> container = new HashSet<>();
         Node root = trieset.getRoot();
@@ -129,7 +138,7 @@ public class BoggleSolver {
 
                 String tempstr;
                 Node child_node;
-                char cur_char = boggleboard.getLetter(ij[0], ij[1]);
+                char cur_char = char_board[ij[0]][ij[1]];
                 if (cur_char == 'Q') {
                     tempstr = str + "QU";
                     child_node = trieset.getNode(tempstr, str.length(), cur_node);
