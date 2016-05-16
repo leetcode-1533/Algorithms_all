@@ -41,10 +41,10 @@ public class TrieSET implements Iterable<String> {
     private int N;          // number of keys in trie
 
     // R-way trie node
-//    private static class Node {
-//        private Node[] next = new Node[R];
-//        private boolean isString;
-//    }
+    public static class Node {
+        private Node[] next = new Node[R];
+        private boolean isString;
+    }
 
     /**
      * Initializes an empty set of strings.

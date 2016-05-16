@@ -122,13 +122,13 @@ public class BoggleSolver {
 
 
         Set<String> container = new HashSet<>();
-        Node root = trieset.getRoot();
+        TrieSET.Node root = trieset.getRoot();
         dfs(root, new boolean[M * N], "", container, M * N);
 
         return container;
     }
 
-    private void dfs(Node cur_node, boolean[] visited, String str, Set<String> container, int index) {
+    private void dfs(TrieSET.Node cur_node, boolean[] visited, String str, Set<String> container, int index) {
         for (int opts : dir.get(index)) {
             if (!visited[opts]) {
                 int[] ij = index2ij(opts);
@@ -137,7 +137,7 @@ public class BoggleSolver {
                 tempvisited[opts] = true;
 
                 String tempstr;
-                Node child_node;
+                TrieSET.Node child_node;
                 char cur_char = char_board[ij[0]][ij[1]];
                 if (cur_char == 'Q') {
                     tempstr = str + "QU";
