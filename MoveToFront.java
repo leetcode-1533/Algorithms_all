@@ -1,7 +1,7 @@
 /**
  * Created by y1275963 on 5/19/16.
  */
-import edu.princeton.cs.algs4.StdOut;
+//import edu.princeton.cs.algs4.StdOut;
 
 import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
@@ -17,7 +17,7 @@ public class MoveToFront {
 
         for (int i = 0; i < R; i++)
             list.add(i);
-        while(!BinaryStdIn.isEmpty()) {
+        while (!BinaryStdIn.isEmpty()) {
             char temp = BinaryStdIn.readChar();
             int i;
             for (i = 0; i < R; i++) {

@@ -1,4 +1,4 @@
-import edu.princeton.cs.algs4.StdOut;
+//import edu.princeton.cs.algs4.StdOut;
 
 
 // v1 is implemented using LSD
@@ -59,8 +59,8 @@ public class CircularSuffixArray {
     }
 
     public static void main(String[] args) {
-        String str = "ABRACADABRA!";
-        CircularSuffixArray test = new CircularSuffixArray(str);
+//        String str = "ABRACADABRA!";
+//        CircularSuffixArray test = new CircularSuffixArray(str);
 //        for (int index = 0; index < test.length(); index++) {
 //            for (int i = test.length() - 1; i > 0; i--) {
 //                StdOut.print(test.charAt(i, index));
