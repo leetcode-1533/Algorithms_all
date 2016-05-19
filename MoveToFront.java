@@ -13,10 +13,7 @@ public class MoveToFront {
     public static void encode() {
         int R = 256; // extended ASCII
         Alphabet alpha = Alphabet.EXTENDED_ASCII;
-//        String str_alpha = alpha.toString();
         LinkedList<Integer> list = new LinkedList<>();
-
-//        StdOut.println(alpha.R());
 
         for (int i = 0; i < R; i++)
             list.add(i);
@@ -35,7 +32,21 @@ public class MoveToFront {
     }
 
     public static void decode() {
+        int R = 256; // extended ASCII
+        Alphabet alpha = Alphabet.EXTENDED_ASCII;
+        LinkedList<Integer> list = new LinkedList<>();
 
+        for (int i = 0; i < R; i++)
+            list.add(i);
+        while (!BinaryStdIn.isEmpty()) {
+            int loc = BinaryStdIn.readInt(8);
+            int list_content = list.get(loc);
+            char temp = alpha.toChar(list_content);
+            BinaryStdOut.write(temp);
+            list.remove(loc);
+            list.addFirst(list_content);
+        }
+        BinaryStdOut.close();
     }
 
     public static void main(String[] args) {
