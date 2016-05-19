@@ -5,7 +5,7 @@ import edu.princeton.cs.algs4.BinaryStdIn;
 import edu.princeton.cs.algs4.BinaryStdOut;
 import edu.princeton.cs.algs4.StdOut;
 public class BurrowsWheeler {
-    private char charAt(String text, int i, int index) {
+    private static char charAt(String text, int i, int index) {
         int N = text.length();
         int num = i + index;
         if (num >= N)
@@ -15,7 +15,21 @@ public class BurrowsWheeler {
     }
 
     public static void encode() {
-
+        String s = BinaryStdIn.readString();
+        CircularSuffixArray CSA = new CircularSuffixArray(s);
+        int first = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (CSA.index(i) == 0) {
+                first = i;
+                break;
+            }
+        }
+        BinaryStdOut.write(first);
+        for (int i = 0; i < s.length(); i++) {
+//            StdOut.printf("%c ", charAt(s, s.length() - 1, CSA.index(i)));
+            BinaryStdOut.write(charAt(s, s.length() - 1, CSA.index(i)));
+        }
+        BinaryStdOut.close();
     }
 
     public static void decode() {
@@ -24,14 +38,9 @@ public class BurrowsWheeler {
 
     public static void main(String[] args) {
         if (args[0].equals("+"))
-            StdOut.println('+');
-        else
-            StdOut.println(args[0]);
-
-        while (!BinaryStdIn.isEmpty()) {
-            char c = BinaryStdIn.readChar();
-            StdOut.println(c);
-        }
+            decode();
+        else if (args[0].equals("-"))
+            encode();
     }
 }
 

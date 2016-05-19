@@ -67,8 +67,8 @@ public class CircularSuffixArray {
 //            }
 //            StdOut.print('\n');
 //        }
-        for (int i = 0; i < test.length(); i++) {
-            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
-        }
+//        for (int i = 0; i < test.length(); i++) {
+//            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
+//        }
     }
 }
