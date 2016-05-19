@@ -59,16 +59,16 @@ public class CircularSuffixArray {
     }
 
     public static void main(String[] args) {
-        CircularSuffixArray test = new CircularSuffixArray("ABRACADABRA!");
+        String str = "ABRACADABRA!";
+        CircularSuffixArray test = new CircularSuffixArray(str);
 //        for (int index = 0; index < test.length(); index++) {
 //            for (int i = test.length() - 1; i > 0; i--) {
 //                StdOut.print(test.charAt(i, index));
 //            }
 //            StdOut.print('\n');
 //        }
-
-//        for (int i = 0; i < test.length(); i++) {
-//            StdOut.printf("%d ",test.suffixes[i]);
-//        }
+        for (int i = 0; i < test.length(); i++) {
+            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
+        }
     }
 }
