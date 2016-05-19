@@ -34,6 +34,9 @@ public class CircularSuffixArray {
 
     public CircularSuffixArray(String s) {
         // circular suffix array of s
+        if (s == null)
+            throw new java.lang.NullPointerException();
+
         text = s;
         N = text.length();
         suffixes = new int[N];
@@ -50,7 +53,9 @@ public class CircularSuffixArray {
 
     public int index(int i) {
         // returns index of ith sorted suffix
-        return 0;
+        if (i >= N || i < 0)
+            throw new java.lang.IndexOutOfBoundsException();
+        return suffixes[i];
     }
 
     public static void main(String[] args) {
@@ -61,8 +66,9 @@ public class CircularSuffixArray {
 //            }
 //            StdOut.print('\n');
 //        }
-        for (int i = 0; i < test.length(); i++) {
-            StdOut.printf("%d ",test.suffixes[i]);
-        }
+
+//        for (int i = 0; i < test.length(); i++) {
+//            StdOut.printf("%d ",test.suffixes[i]);
+//        }
     }
 }
