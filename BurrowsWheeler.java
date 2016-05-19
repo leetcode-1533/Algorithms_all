@@ -33,9 +33,8 @@ public class BurrowsWheeler {
     }
 
     public static void decode() {
-//        int first = BinaryStdIn.readInt();
-//        String text = BinaryStdIn.readString();
-        String text = "ARD!RCAAAABB";
+        int first = BinaryStdIn.readInt();
+        String text = BinaryStdIn.readString();
         int N = text.length();
         int R = 256; // extended ASCII
 
@@ -46,11 +45,22 @@ public class BurrowsWheeler {
             count[text.charAt(i) + 1]++;
         for (int r = 0; r < R; r++)
             count[r+1] += count[r];
+
+        int[] count_copy = count.clone(); // make a copy
+
         for (int i = 0; i < N; i++)
             next[count[text.charAt(i)]++] = i;
 
+        // recover original text
+        char[] firstCol = new char[N];
         for (int i = 0; i < N; i++)
-            StdOut.println(next[i]);
+            firstCol[count_copy[text.charAt(i)]++] = text.charAt(i);
+        int temp = first;
+        for (int i = 0; i < N; i++) {
+            BinaryStdOut.write(firstCol[temp]);
+            temp = next[temp];
+        }
+        BinaryStdOut.close();
     }
 
     public static void main(String[] args) {
