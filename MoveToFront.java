@@ -69,7 +69,6 @@ public class MoveToFront {
             before.next = header.next;
             header.next = dummy.next;
             dummy.next = header;
-
         }
         BinaryStdOut.close();
     }
