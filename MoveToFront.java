@@ -47,17 +47,29 @@ public class MoveToFront {
     public static void decode() {
         int R = 256; // extended ASCII
         Alphabet alpha = Alphabet.EXTENDED_ASCII;
-        LinkedList<Integer> list = new LinkedList<>();
-
+        int[] num_temp = new int[R];
         for (int i = 0; i < R; i++)
-            list.add(i);
+            num_temp[i] = i;
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = ListNode.constructLinkedList(num_temp);
+
         while (!BinaryStdIn.isEmpty()) {
             int loc = BinaryStdIn.readInt(8);
-            int list_content = list.get(loc);
-            char temp = alpha.toChar(list_content);
+            ListNode header = dummy.next;
+            ListNode before = dummy;
+            while (loc-- > 0) {
+                before = header;
+                header = header.next;
+            }
+
+            char temp = alpha.toChar(header.val);
             BinaryStdOut.write(temp);
-            list.remove(loc);
-            list.addFirst(list_content);
+
+            before.next = header.next;
+            header.next = dummy.next;
+            dummy.next = header;
+
         }
         BinaryStdOut.close();
     }
