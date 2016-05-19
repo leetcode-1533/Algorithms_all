@@ -13,20 +13,33 @@ public class MoveToFront {
     public static void encode() {
         int R = 256; // extended ASCII
         Alphabet alpha = Alphabet.EXTENDED_ASCII;
-        LinkedList<Integer> list = new LinkedList<>();
 
+        int[] num_temp = new int[R];
         for (int i = 0; i < R; i++)
-            list.add(i);
+            num_temp[i] = i;
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = ListNode.constructLinkedList(num_temp);
+
         while (!BinaryStdIn.isEmpty()) {
-            char temp = BinaryStdIn.readChar();
-            int i;
-            for (i = 0; i < R; i++) {
-                if (alpha.toChar(list.get(i)) == (temp))
-                    break;
+            char read_char = BinaryStdIn.readChar();
+            int char_index = alpha.toIndex(read_char);
+
+            int i = 0;
+            ListNode header = dummy.next;
+            ListNode before = dummy;
+
+            while (header.val != char_index) {
+                before = header;
+                header = header.next;
+                i++;
             }
+
             BinaryStdOut.write(i, 8);
-            list.remove(i);
-            list.addFirst(alpha.toIndex(temp));
+
+            before.next = header.next;
+            header.next = dummy.next;
+            dummy.next = header;
         }
         BinaryStdOut.close();
     }
