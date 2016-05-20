@@ -45,7 +45,8 @@ public class CircularSuffixArray {
             suffixes[i] = i;
         }
 //        lsdSort();
-        insertion(0, N-1, 0);
+//        insertion(0, N-1, 0);
+        qsort(0, N-1, 0);
     }
 
     public int length() {
@@ -62,23 +63,39 @@ public class CircularSuffixArray {
 
     private static final int CUTOFF = 5;
 
-//    private void quickSort() {
-//        qsort(0, N-1, 0);
-//    }
-//
-//    private void qsort(int lo, int hi, int d) {
-//        if (hi <= lo + CUTOFF) {
-//            insertion(lo, hi, d);
-//            return;
-//        }
-//    }
+
+    private void qsort(int lo, int hi, int d) {
+        if (hi <= lo + CUTOFF) {
+            insertion(lo, hi, d);
+            return;
+        }
+
+        int lt = lo, gt = hi;
+        int v = charAt(d, suffixes[lo]);
+        int i = lo + 1;
+        while (i <= gt) {
+            int t = charAt(d, suffixes[i]);
+            if      (t < v) exch(lt++, i++);
+            else if (t > v) exch(i, gt--);
+            else              i++;
+        }
+
+        // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi].
+        qsort(lo, lt-1, d);
+        if (v >= 0) qsort(lt, gt, d+1);
+        qsort(gt+1, hi, d);
+    }
+
+    private void exch(int index1, int index2) {
+        int temp = suffixes[index1];
+        suffixes[index1] = suffixes[index2];
+        suffixes[index2] = temp;
+    }
 
     private void insertion(int lo, int hi, int d) {
         for (int i = lo; i <= hi; i++) {
             for (int j = i; j > lo && less(suffixes[j], suffixes[j-1], d); j--) {
-                int temp = suffixes[j];
-                suffixes[j] = suffixes[j-1];
-                suffixes[j-1] = temp;
+                exch(j, j-1);
             }
         }
     }
