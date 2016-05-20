@@ -1,4 +1,4 @@
-//import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdOut;
 
 
 // v1 is implemented using LSD
@@ -9,10 +9,11 @@ public class CircularSuffixArray {
 
     private char charAt(int i, int index) {
         int num = i + index;
-        if (num >= N)
-            return text.charAt(num - N);
-        else
-            return text.charAt(num);
+        return text.charAt(num % N);
+//        if (num >= N)
+//            return text.charAt(num - N);
+//        else
+//            return text.charAt(num);
     }
 
     private void lsdSort() {
@@ -43,7 +44,8 @@ public class CircularSuffixArray {
         for (int i = 0; i < N; i++) {
             suffixes[i] = i;
         }
-        lsdSort();
+//        lsdSort();
+//        insertion(0, N-1, N-1);
     }
 
     public int length() {
@@ -58,15 +60,73 @@ public class CircularSuffixArray {
         return suffixes[i];
     }
 
-    public static void main(String[] args) {
-//        String str = "ABRACADABRA!";
-//        CircularSuffixArray test = new CircularSuffixArray(str);
-//        for (int index = 0; index < test.length(); index++) {
-//            for (int i = test.length() - 1; i > 0; i--) {
-//                StdOut.print(test.charAt(i, index));
-//            }
-//            StdOut.print('\n');
+    private static final int CUTOFF = 5;
+
+//    private void quickSort() {
+//        qsort(0, N-1, 0);
+//    }
+//
+//    private void qsort(int lo, int hi, int d) {
+//        if (hi <= lo + CUTOFF) {
+//            insertion(lo, hi, d);
+//            return;
 //        }
+//    }
+
+    private void insertion(int lo, int hi, int d) {
+        for (int i = lo; i <= hi; i++) {
+            for (int j = i; j > lo && less(suffixes[j], suffixes[j-1], d); j--) {
+                int temp = suffixes[j];
+                suffixes[j] = suffixes[j-1];
+                suffixes[j-1] = temp;
+            }
+        }
+    }
+
+    private boolean less(int v, int w, int d) {
+        for (int i = d; i < N; i++) {
+            if (charAt(i, v) < charAt(i, w)) return true;
+            if (charAt(i, v) > charAt(i, w)) return false;
+        }
+        return false;
+    }
+
+
+
+
+    public static void main(String[] args) {
+        String str = "ABRACADABRA!";
+
+        CircularSuffixArray test = new CircularSuffixArray(str);
+        for (Integer item : test.suffixes) {
+            for (int i = test.length() - 1; i > 0; i--) {
+                StdOut.print(test.charAt(i, item));
+            }
+            StdOut.print('\n');
+        }
+        StdOut.print('\n');
+
+
+        test.lsdSort();
+        for (Integer item : test.suffixes) {
+            for (int i = test.length() - 1; i > 0; i--) {
+                StdOut.print(test.charAt(i, item));
+            }
+            StdOut.print('\n');
+        }
+        StdOut.print('\n');
+
+
+        test.insertion(0, test.length()-1, 0);
+        for (Integer item : test.suffixes) {
+            for (int i = test.length() - 1; i > 0; i--) {
+                StdOut.print(test.charAt(i, item));
+            }
+            StdOut.print('\n');
+        }
+        StdOut.print('\n');
+
+
 //        for (int i = 0; i < test.length(); i++) {
 //            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
 //        }
