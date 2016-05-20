@@ -45,7 +45,7 @@ public class CircularSuffixArray {
             suffixes[i] = i;
         }
 //        lsdSort();
-//        insertion(0, N-1, N-1);
+        insertion(0, N-1, 0);
     }
 
     public int length() {
@@ -96,39 +96,15 @@ public class CircularSuffixArray {
 
     public static void main(String[] args) {
         String str = "ABRACADABRA!";
-
         CircularSuffixArray test = new CircularSuffixArray(str);
-        for (Integer item : test.suffixes) {
-            for (int i = test.length() - 1; i > 0; i--) {
-                StdOut.print(test.charAt(i, item));
+        for (int index : test.suffixes) {
+            for (int i = 0; i < test.length() - 1; i++) {
+                StdOut.print(test.charAt(i, index));
             }
             StdOut.print('\n');
         }
-        StdOut.print('\n');
-
-
-        test.lsdSort();
-        for (Integer item : test.suffixes) {
-            for (int i = test.length() - 1; i > 0; i--) {
-                StdOut.print(test.charAt(i, item));
-            }
-            StdOut.print('\n');
+        for (int i = 0; i < test.length(); i++) {
+            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
         }
-        StdOut.print('\n');
-
-
-        test.insertion(0, test.length()-1, 0);
-        for (Integer item : test.suffixes) {
-            for (int i = test.length() - 1; i > 0; i--) {
-                StdOut.print(test.charAt(i, item));
-            }
-            StdOut.print('\n');
-        }
-        StdOut.print('\n');
-
-
-//        for (int i = 0; i < test.length(); i++) {
-//            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
-//        }
     }
 }
