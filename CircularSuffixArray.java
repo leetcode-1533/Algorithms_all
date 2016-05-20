@@ -1,4 +1,4 @@
-import edu.princeton.cs.algs4.StdOut;
+//import edu.princeton.cs.algs4.StdOut;
 
 
 // v1 is implemented using LSD
@@ -61,7 +61,7 @@ public class CircularSuffixArray {
         return suffixes[i];
     }
 
-    private static final int CUTOFF = 5;
+    private static final int CUTOFF = 15;
 
 
     private void qsort(int lo, int hi, int d) {
@@ -111,17 +111,17 @@ public class CircularSuffixArray {
 
 
 
-    public static void main(String[] args) {
-        String str = "ABRACADABRA!";
-        CircularSuffixArray test = new CircularSuffixArray(str);
-        for (int index : test.suffixes) {
-            for (int i = 0; i < test.length() - 1; i++) {
-                StdOut.print(test.charAt(i, index));
-            }
-            StdOut.print('\n');
-        }
-        for (int i = 0; i < test.length(); i++) {
-            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
-        }
-    }
+//    public static void main(String[] args) {
+//        String str = "ABRACADABRA!";
+//        CircularSuffixArray test = new CircularSuffixArray(str);
+//        for (int index : test.suffixes) {
+//            for (int i = 0; i < test.length() - 1; i++) {
+//                StdOut.print(test.charAt(i, index));
+//            }
+//            StdOut.print('\n');
+//        }
+//        for (int i = 0; i < test.length(); i++) {
+//            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
+//        }
+//    }
 }
