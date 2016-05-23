@@ -1,4 +1,4 @@
-//import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdOut;
 
 
 // v1 is implemented using LSD
@@ -82,7 +82,7 @@ public class CircularSuffixArray {
 
         // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi].
         qsort(lo, lt-1, d);
-        if (v >= 0) qsort(lt, gt, d+1);
+        if (d <= N) qsort(lt, gt, d+1);
         qsort(gt+1, hi, d);
     }
 
@@ -111,17 +111,17 @@ public class CircularSuffixArray {
 
 
 
-//    public static void main(String[] args) {
-//        String str = "ABRACADABRA!";
-//        CircularSuffixArray test = new CircularSuffixArray(str);
-//        for (int index : test.suffixes) {
-//            for (int i = 0; i < test.length() - 1; i++) {
-//                StdOut.print(test.charAt(i, index));
-//            }
-//            StdOut.print('\n');
-//        }
-//        for (int i = 0; i < test.length(); i++) {
-//            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
-//        }
-//    }
+    public static void main(String[] args) {
+        String str = "ABRACADABRA!";
+        CircularSuffixArray test = new CircularSuffixArray(str);
+        for (int index : test.suffixes) {
+            for (int i = 0; i < test.length() - 1; i++) {
+                StdOut.print(test.charAt(i, index));
+            }
+            StdOut.print('\n');
+        }
+        for (int i = 0; i < test.length(); i++) {
+            StdOut.printf("%c ",test.charAt(test.length() - 1, test.suffixes[i]));
+        }
+    }
 }
